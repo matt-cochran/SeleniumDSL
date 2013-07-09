@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -8,27 +8,487 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <style type="text/css">
+        .hilite {
+            background-color: #FF0;
+        }
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
+        .test-syntax {
+            line-height: normal;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 9pt;
+            font-style: normal;
+            color: #00F;
+        }
+    </style>
     <title>Selenium DSL by matt-cochran</title>
-  </head>
+</head>
 
-  <body>
+<body>
     <header>
-      <div class="inner">
-        <h1>Selenium DSL</h1>
-        <h2>DSL for executing Selenium tests</h2>
-        <a href="https://github.com/matt-cochran/SeleniumDSL" class="button"><small>View project on</small>GitHub</a>
-      </div>
+        <div class="inner">
+            <h1>Selenium DSL</h1>
+            <h2>Domain Specific Language for
+                <br />
+                Executing Selenium Tests</h2>
+            <a href="https://github.com/matt-cochran/SeleniumDSL" class="button"><small>View project on</small>GitHub</a>
+        </div>
     </header>
-
     <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h3>
+        <div class="inner clearfix">
+            <section id="main-content">
+                <p>
+                    <i><b>Status: </b></i>
+                </p>
+                <p>
+                    <i><span style="font-weight: normal">Alpha</span></i>.
+        Parser/Executor is working for the syntax (below).  More operations
+        and better output is required before we can go to beta.
+                    <br>
+                </p>
+                <p><b><em>Goal: </em></b></p>
+                <p>
+                    This project's goal is to
+        create tests in a meta-language where tests can be written and understood in a syntax closer
+        to english.
+                </p>
+                <p>
+                    <i><span style="text-decoration: none"><b>Overview: </b></span></i>
+                </p>
+                <p>
+                    This project is an attempt to make
+        maintenance of automated browser tests easier for web applications.
+                    <br>
+                </p>
+                <p>
+                    When the code in  a project matures,
+        the amount of tests grows and changes become more complex and
+        potentially have a broader impact.  As a developer I want to be able
+        to offload some of the test maintenance and creation to the qa and/or
+        business so I can spend more time on building cool new features. 
+        Possible opportunities would be the high-level tests like of defining
+        critical paths through the site or new features.  These tests that
+        will probably live the longest because they have the least coupling
+        with implementation.  Some of the more technical tests that are a bit
+        closer to the metal will always be maintained by developers, but you
+        don't need to be a developer to understand the high-level business
+        requirements and script basic tests against the application. 
+                </p>
+                <p>
+                    <strong>Sample Syntax:</strong><br>
+                </p>
+                <p>
+                    Here is the syntax for a test scenario:
+                    <br>
+                </p>
+                <p class="test-syntax">
+                    test
+        the home page.
+                    <br />
+                    show
+        that the page loads.
+                    <br />
+                    use
+        firefox, ie, chrome.
+                    <br />
+                    define
+        target page as <a href="http://www.google.com">http://www.google.com</a>.
+                    <br />
+                    define
+        search box as element named 'q'.
+                    <br />
+                    {<br />
+                    &nbsp;&nbsp;&nbsp; go
+        to the target page.
+                    <br />
+                    &nbsp;&nbsp;&nbsp; clear
+        the search box.
+                    <br />
+                    &nbsp;&nbsp;&nbsp; send
+        'asdf' to the search box.
+                    <br />
+                    &nbsp;&nbsp;&nbsp; assert
+        the search box has value 'asdf'
+                    <br />
+                    }<br>
+                </p>
+                <p>
+                    The first line will define the target
+        page for the story:
+                </p>
+                <p class="test-syntax">
+                    test
+        the <span class="hilite">home page</span>.<br>
+                </p>
+                <p>
+                    The second line defines what we are
+        testing:
+                </p>
+                <p class="test-syntax">
+                    show
+        that <span class="hilite">the page loads</span>.<br>
+                </p>
+                <p>
+                    The third  line will define the
+        browsers we want to test the story against.
+                </p>
+                <p class="test-syntax">
+                    use <span class="hilite">firefox, ie, chrome</span>.<br>
+                </p>
+                <p>
+                    The next lines will define variables I
+        can push into the test steps
+                </p>
+                <p class="test-syntax">define <span class="hilite">target page</span> as <span class="hilite">http://www.google.com</span>.</p>
+                <p class="test-syntax">
+                    define <span class="hilite">search box</span> as <span class="hilite">element
+        named 'q'</span>.<br>
+                </p>
+                <p>
+                    And finally the test steps are embedded
+        in brackets:
+                </p>
+                <p class="test-syntax">
+                    {<br />
+                    &nbsp;&nbsp;&nbsp; go
+        to the <span class="hilite">target page</span>.
+                    <br />
+                    &nbsp;&nbsp;&nbsp; clear
+        the <span class="hilite">search box</span>.
+                    <br />
+                    &nbsp;&nbsp;&nbsp; send
+        'asdf' to the <span class="hilite">search box</span>.
+                    <br />
+                    &nbsp;&nbsp;&nbsp; assert
+        the <span class="hilite">search box</span> has value
+        'asdf'
+                    <br />
+                    }<br>
+                </p>
+                <p><strong>Made possible by:</strong></p>
+                <p>
+                    <a href="http://phantomjs.org/">http://phantomjs.org/</a><br />
+                    <a href="https://github.com/sprache/Sprache">https://github.com/sprache/Sprache</a><br />
+                    <a href="http://docs.seleniumhq.org/">http://docs.seleniumhq.org/</a>
+                </p>
+                <p><strong>Primary projects in this solution: </strong></p>
+                <ol>
+                    <li>
+                        <b>MC.Selenium.DSL </b>: the project that parses and runs the test stept</li>
+                    <li>
+                        <b>MC.Selenium.Runner:</b> the command line to execute the test</li>
+                    <li>
+                        <b>MC.Selenium.DSL.Runner.Model:</b> the project the parses the scenario syntax</li>
+                </ol>
+                <p style="text-decoration: none">
+                    <b>Project:
+        MC.Selenium.DSL</b>
+                    <br>
+                </p>
+                <p>
+                    this
+        project extends the OpenQA.Selenium.IWebDriver by adding a
+        .ExecuteCommand() method that you can pass a test step, or series of
+        test steps to.
+                    <br>
+                </p>
+                <p><strong>Sample supported commands:</strong> </p>
+                <ul class="test-syntax">
+                    <li>clear element with id "gbqfq"
+                    </li>
+
+                    <li>clear element with name 'q'
+                    </li>
+
+                    <li>clear element named 'q'
+                    </li>
+
+                    <li>send 'C6E2E7D1-1D7B-4390-9E7C-4626B18CC137' to element with name 'q'
+                    </li>
+
+                    <li>send 'asdf' to element named 'q'
+                    </li>
+
+                    <li>click element with css selector '#gbqfb'
+                    </li>
+
+                    <li>click element with xpath "//button[@id='gbqfb']"
+                    </li>
+
+                    <li>click element with link text 'asdf'
+                    </li>
+
+                    <li>set element with name 'asdf' text to '1234'
+                    </li>
+
+                    <li>set text box with id '10' to '1234'
+                    </li>
+
+                    <li>set text area with id '10' to '1234'
+                    </li>
+
+                    <li>set radio button group with id '10' to 'x'
+                    </li>
+
+                    <li>set radio button with id '10' to 'x'
+                    </li>
+
+                    <li>set radio with id '10' to 'x'
+                    </li>
+
+                    <li>set check box with id 'xyz' to checked
+                    </li>
+
+                    <li>set check box with id 'xyz' to unchecked
+                    </li>
+
+                    <li>set check box with id 'xyz' to not checked
+                    </li>
+
+                    <li>set option with id 'opt2' to selected
+                    </li>
+
+                    <li>set option with id 'opt2' to unselected
+                    </li>
+
+                    <li>set option with id 'opt2' to not selected
+                    </li>
+
+                    <li>set select with id 'xyz' to 'option2'
+                    </li>
+
+                    <li>assert element with id '10' has attribute 'x'
+                    </li>
+
+                    <li>assert that element with id '10' has attribute 'x'
+                    </li>
+
+                    <li>assert that element with id '10' has value 'x'
+                    </li>
+
+                    <li>assert that element with id '10' has value that ends with 'x'
+                    </li>
+
+                    <li>assert that element with id '10' has value ending with 'x'
+                    </li>
+
+                    <li>assert that element with id '10' has value that begins with 'x'
+                    </li>
+
+                    <li>assert that element with id '10' has value beginning with 'x'
+                    </li>
+
+                    <li>assert that element with id '10' has value that contains 'x'
+                    </li>
+
+                    <li>assert that element with id '10' has value containing 'x'
+                    </li>
+
+                    <li>assert element with id '10' has attribute 'x' that ends with 'x'
+                    </li>
+
+                    <li>assert element with id '10' has attribute 'x' that contains 'asdf'
+                    </li>
+
+                    <li>assert element with id '10' has attribute 'x' ending with 'x'
+                    </li>
+
+                    <li>assert element with id '10' has attribute 'x' containing 'asdf'
+                    </li>
+
+                    <li>assert element with id '10' has attribute 'x' with value 'x'
+                    </li>
+
+                    <li>assert element with id '10' has css key 'x'
+                    </li>
+
+                    <li>assert element with id '10' has css key 'x' that ends with 'x'
+                    </li>
+
+                    <li>assert element with id '10' has css key 'x' that contains 'asdf'
+                    </li>
+
+                    <li>assert element with id '10' has css key 'x' ending with 'x'
+                    </li>
+
+                    <li>assert element with id '10' has css key 'x' containing 'asdf'
+                    </li>
+
+                    <li>assert element with id '10' has css key 'x' with value 'x'
+                    </li>
+
+                    <li>assert element with id '10' has text with value 'x'
+                    </li>
+
+                    <li>assert element with id '10' has text that ends with 'x'
+                    </li>
+
+                    <li>assert element with id '10' has text that contains 'asdf'
+                    </li>
+
+                    <li>assert element with id '10' has text ending with 'x'
+                    </li>
+
+                    <li>assert element with id '10' has text containing 'asdf'
+                    </li>
+
+                    <li>assert text box with id '10' has text with value '1234'
+                    </li>
+
+                    <li>assert text box with id '10' has value ending with '1234'
+                    </li>
+
+                    <li>assert text box with id '10' has value '1234'
+                    </li>
+
+                    <li>assert text box with id '10' has text ending with '1234'
+                    </li>
+
+                    <li>assert text area with id '10' has text with value '1234'
+                    </li>
+
+                    <li>assert radio button group with id '10' has text with value 'x'
+                    </li>
+
+                    <li>assert check box with id 'xyz' has attribute 'checked' with value 'true'
+                    </li>
+
+                    <li>assert check box with id 'xyz' is checked
+                    </li>
+
+                    <li>assert check box with id 'xyz' is unchecked
+                    </li>
+
+                    <li>assert check box with id 'xyz' is not checked
+                    </li>
+
+                    <li>assert select with id 'xyz' has value 'option2'
+                    </li>
+
+                    <li>assert select list with id 'xyz' has value 'option2'
+                    </li>
+
+                    <li>assert option with id 'opt1' is selected
+                    </li>
+
+                    <li>assert option with id 'opt1' is not selected
+                    </li>
+
+                    <li>assert option with id 'opt1' is  </li>
+
+                </ul>
+                <p>
+                    You
+        can combine commands by putting them in order and optionally
+        separating them with a period, comma, or 'then' text.  The following
+        would be valid test instructions:
+                    <br>
+                </p>
+                <p class="test-syntax">
+                    assert
+        select with id 'y' has value 'one',
+                    <br />
+                    assert
+      option with id 'opt1' is selected
+                    <br />
+                    then
+      assert option with id 'opt2' is not selected.<br>
+                </p>
+                <p class="test-syntax">
+                    set
+        option with id 'opt2' to selected,
+                    <br />
+                    then
+        assert select with id 'y' has value 'two' assert option with id
+        'opt1' is not selected
+                    <br />
+                    assert
+        option with id 'opt2' is selected.<br>
+                </p>
+                <p class="test-syntax">
+                    set
+        option with id 'opt2' to not selected,
+                    <br />
+                    assert
+        select with id 'y' has value ''<br>
+                </p>
+
+                </table>
+       Working
+        on: 
+        <ul>
+            <li>expanded
+            syntax </li>
+            <li>javascript
+                execution </li>
+
+            <li>more
+                form interactions </li>
+
+            <li>better
+            logging/reporting 
+          <ul>
+              <li>parsing</li>
+              <li>execution</li>
+          </ul>
+            </li>
+            <li>mono
+            version </li>
+        </ul>
+                <p style="text-decoration: none">
+                    <b>Project:
+        MC.Selenium.DSL.Runner</b>
+                    <br>
+                </p>
+                <p>
+                    This
+        project contains the executable to run tests:
+                </p>
+                <table width="100%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0">
+                    <col width="256*">
+                    <tr>
+                        <td width="100%" valign="TOP" bgcolor="#000000">
+                            <p style="background: transparent">
+                                <span class="auto-style1">SeleniumDSLRunner.exe
+              Sample1.rst</span>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                Working
+        on: 
+      <ul>
+          <li>
+          better
+            logging/output 
+        <li>
+          supporting
+            nunit xml output (for build server integration) 
+        <li>
+          mono
+            version 
+      </ul>
+                <b>Project:
+        MC.Selenium.DSL.Runner.Model</b>
+                <p>
+                    This
+        project contains the model code for the Runner.
+                </p>
+                <p>Working on: </p>
+                <ul>
+                    <li>better
+          reporting/logging
+        <ul>
+            <li>parsing </li>
+            <li>execution </li>
+        </ul>
+                    </li>
+                    <li>adding more test
+          definition syntax </li>
+                    <li>
+                        <p>mono version </p>
+                </ul>
+                <!--          <h3>
 <a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
 
 <p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
@@ -59,25 +519,15 @@ $ git checkout gh-pages
 <a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
 
 <p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-        </section>
+       -->
 
-        <aside id="sidebar">
-          <a href="https://github.com/matt-cochran/SeleniumDSL/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/matt-cochran/SeleniumDSL/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/matt-cochran/SeleniumDSL"></a> is maintained by <a href="https://github.com/matt-cochran">matt-cochran</a>.</p>
-
-          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+            </section>
+            <aside id="sidebar">
+                <a href="https://github.com/matt-cochran/SeleniumDSL/zipball/master" class="button"><small>Download</small> .zip file </a><a href="https://github.com/matt-cochran/SeleniumDSL/tarball/master" class="button"><small>Download</small> .tar.gz file </a>
+                <p class="repo-owner">is maintained by <a href="https://github.com/matt-cochran">matt-cochran</a>.</p>
+                <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+            </aside>
+        </div>
     </div>
-
-  
-  </body>
+</body>
 </html>
