@@ -1,0 +1,1 @@
+This is a formatter for the Mozilla Selenium IDE 2.0.0.0 Plug-In
