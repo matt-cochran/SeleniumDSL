@@ -63,6 +63,40 @@ namespace MC.Selenium.DSL.Tests
             yield return @"set option with id 'opt2' to not selected";
             // TODO: work here
 
+            //yield return @"set cookie key 'asdf' to value 'asdf'";
+            //yield return @"delete all cookies";
+            //yield return @"delete cookie 'asdf'"; // figure out syntax
+
+
+            //yield return @"check element with id 'asdf'";
+
+            //yield return @"focus on element with name 'asdf'";
+            //yield return @"add script ''";
+            //yield return @"type 'asdf'";
+            //yield return @"save screen shot to 'asdfasdf'";
+            //yield return @"save full screen shot to 'asdfasdf'";
+
+            //yield return @"press and hold alt key";
+            //yield return @"release alt key";
+
+            //yield return @"press and hold ctrl key";
+            //yield return @"release ctrl key";
+
+            //yield return @"press the 'a' key";
+            //yield return @"press and hold the 'a' key";
+
+            // track button ids
+            // track window i
+
+            //yield return @"track button ids";
+            //yield return @"track window ids";
+            //yield return @"track window names";
+
+            //yield return @"when new window opens";
+
+
+        //http://selenium.googlecode.com/svn-history/r12872/trunk/docs/api/dotnet/html/T_Selenium_ISelenium.htm
+            //http://selenium.googlecode.com/svn-history/r12872/trunk/docs/api/dotnet/html/AllMembers_T_Selenium_ISelenium.htm
             
             yield return "set select with id 'xyz' to 'option2'"; // todo: check single sel vs. multi sel
             //yield return "set select with id 'xyz' to 'option2' and 'option3' and 'option4'";
@@ -223,15 +257,15 @@ send 'asdf' to element named 'q'";
             result.WasSuccessful.Should().BeTrue(result.Message);  
         }
 
-        public void Sample()
-        {
-            var command =  @"
-go to www.google.com 
-then clear element named 'q'
-then send 'asdf' to element named 'q'";
+//        public void Sample()
+//        {
+//            var command =  @"
+//go to www.google.com 
+//then clear element named 'q'
+//then send 'asdf' to element named 'q'";
 
-            var fireFox = new FireFoxDriver();
-        }
+//            var fireFox = new FireFoxDriver();
+//        }
 
 
         [Test]
