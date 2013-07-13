@@ -102,7 +102,7 @@ RegexpMatch.patternToString = function (pattern) {
 		//value = value.replace(/^\s+/, '');
 		//value = value.replace(/\s+$/, '');
 		pattern = pattern.replace(/\\/g, '\\\\');
-		pattern = pattern.replace(/\"/g, '\\"');
+		pattern = pattern.replace(/\"/g, '\'');
 		pattern = pattern.replace(/\r/g, '\\r');
 		pattern = pattern.replace(/\n/g, '(\\n|\\r\\n)');
 		return '"' + pattern + '"';
@@ -112,7 +112,7 @@ RegexpMatch.patternToString = function (pattern) {
 };
 
 RegexpMatch.prototype.toString = function () {
-	return "Regex.IsMatch(" + this.expression + ", " + RegexpMatch.patternToString(this.pattern) + ")";
+	return this.expression + " matches regex '" + RegexpMatch.patternToString(this.pattern) + "'";
 };
 
 function waitFor(expression) {
@@ -214,8 +214,8 @@ this.configForm = '<description>Variable for Selenium instance</description>' +
     '<checkbox id="options_showSelenese" label="Show Selenese"/>';
 
 this.name = "Selenium DSL (WebDriver)";
-this.testcaseExtension = ".slt";
-this.suiteExtension = ".slt";
+this.testcaseExtension = ".dsl";
+this.suiteExtension = ".dsl";
 this.webdriver = true;
 
 WDAPI.Driver = function () {
@@ -355,9 +355,9 @@ WDAPI.Utils = function () {
 };
 
 WDAPI.Utils.isElementPresent = function (how, what) {
-	return "element" + WDAPI.Driver.searchContext(how, what) + " is present";
+	return "assert element" + WDAPI.Driver.searchContext(how, what) + " is present";
 };
 
 WDAPI.Utils.isAlertPresent = function () {
-	return "alert is present";
+	return "assert alert is present";
 };
