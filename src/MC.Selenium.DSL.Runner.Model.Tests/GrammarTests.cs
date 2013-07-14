@@ -17,7 +17,7 @@ namespace MC.Selenium.DSL.Runner.Model.Tests
         public void TargetTest()
         {
             var command = "test the home page.";
-            var result = Grammar.ParseTarget.End().Parse(command);
+            var result = GrammarParser.ParseTarget.End().Parse(command);
             result.Should().Be("home page");
         }
 
@@ -25,7 +25,7 @@ namespace MC.Selenium.DSL.Runner.Model.Tests
         public void PurposeTest()
         {
             var command = "show that the page loads.";
-            var result = Grammar.ParsePurpose.End().Parse(command);
+            var result = GrammarParser.ParsePurpose.End().Parse(command);
             result.Should().Be("the page loads");
         }
 
@@ -33,7 +33,7 @@ namespace MC.Selenium.DSL.Runner.Model.Tests
         public void BrowserTest()
         {
             var command = "use firefox, ie, chrome.";
-            var result = Grammar.ParseBrowsers.End().Parse(command);
+            var result = GrammarParser.ParseBrowsers.End().Parse(command);
             result.Length.Should().Be(3);
             result[0].Should().Be("firefox");
             result[1].Should().Be("ie");
@@ -45,7 +45,7 @@ namespace MC.Selenium.DSL.Runner.Model.Tests
         {
             var command = @"define target page as http://www.google.com.";
 
-            var result = Grammar.ParseVariable.End().Parse(command);
+            var result = GrammarParser.ParseVariable.End().Parse(command);
             result.Key.Should().Be("target page");
             result.Value.Should().Be("http://www.google.com");
         }
@@ -55,7 +55,7 @@ namespace MC.Selenium.DSL.Runner.Model.Tests
         {
             var command = @"define search box as element named 'q'.";
 
-            var result = Grammar.ParseVariable.End().Parse(command);
+            var result = GrammarParser.ParseVariable.End().Parse(command);
             result.Key.Should().Be("search box");
             result.Value.Should().Be("element named 'q'");
         }
@@ -77,7 +77,7 @@ define search box as element named 'q'.
     send 'asdf' to the search box.
     assert the search box has value 'asdf'
 }";
-            var tests = Grammar.ParseCommand(command);
+            var tests = GrammarParser.ParseCommand(command);
 
             tests.Length.Should().Be(1);
 

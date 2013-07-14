@@ -17,7 +17,7 @@ namespace MC.Selenium.DSL.Tests
         [Test]
         public void GoToTest()
         {
-            var result = Grammar.ParseGoToCommand.TryParse("go to google.com");
+            var result = GrammarParser.ParseGoToCommand.TryParse("go to google.com");
 
             result.WasSuccessful.Should().BeTrue(result.Message);
 
@@ -110,7 +110,7 @@ namespace MC.Selenium.DSL.Tests
         [Test, TestCaseSource("ClearElementTestFactory")]
         public void WebElementCommandTest(String command)
         {
-            var result = Grammar.ParseWebElementCommand.TryParse(command);          
+            var result = GrammarParser.ParseWebElementCommand.TryParse(command);          
             result.WasSuccessful.Should().BeTrue(result.Message);
             result.Remainder.AtEnd.Should().BeTrue("should parse whole line, but stopped on: " + (result.Remainder.AtEnd ? ' ': result.Remainder.Current));
         }
@@ -186,7 +186,7 @@ namespace MC.Selenium.DSL.Tests
         [Test, TestCaseSource("AssertCommandTestFactory")]
         public void AssertCommandTest(String command)
         {
-            var result = Grammar.ParseAssertCommand.TryParse(command);
+            var result = GrammarParser.ParseAssertCommand.TryParse(command);
             result.WasSuccessful.Should().BeTrue(result.Message);
             result.Remainder.AtEnd.Should().BeTrue("string should be fully parsed but stopped at: '" + 
                 (result.Remainder.AtEnd? ' ': result.Remainder.Current ) + 
@@ -209,7 +209,7 @@ namespace MC.Selenium.DSL.Tests
         [Test, TestCaseSource("UrlTestFactory")]
         public void URLTest(String url)
         {
-            var result = Grammar.ParseUrl.TryParse(url);
+            var result = GrammarParser.ParseUrl.TryParse(url);
 
             result.WasSuccessful.Should().BeTrue("'Failure: " + url + " could not be resolved because " +result.Message + " '");
 
@@ -253,7 +253,7 @@ send 'asdf' to element named 'q'";
         [Test, TestCaseSource("ThenTestFactory")]
         public void ThenTest(string cmd)
         {
-            var result = Grammar.ParseThen.TryParse(cmd);
+            var result = GrammarParser.ParseThen.TryParse(cmd);
             result.WasSuccessful.Should().BeTrue(result.Message);  
         }
 
@@ -277,7 +277,7 @@ send 'asdf' to element named 'q'";
                 send 'asdf' to the element named 'q'.
                 assert the element named 'q' has value 'asdf'.";
 
-            var tests = Grammar.ParseCommandText(command);
+            var tests = GrammarParser.ParseCommandText(command);
         }
     }
 }

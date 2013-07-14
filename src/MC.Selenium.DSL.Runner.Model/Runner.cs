@@ -24,7 +24,7 @@ namespace MC.Selenium.DSL.Runner.Model
 
         public void Execute(String command)
         {
-            foreach (var test in Grammar.ParseCommand(command))
+            foreach (var test in GrammarParser.ParseCommand(command))
             {
                 _Executor.Execute(test);
             }

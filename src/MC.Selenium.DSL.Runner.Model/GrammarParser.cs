@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MC.Selenium.DSL.Runner.Model
 {
-    internal static class Grammar
+    internal static class GrammarParser
     {
         public static Test[] ParseCommand(String value)
         {
@@ -57,7 +57,7 @@ namespace MC.Selenium.DSL.Runner.Model
 
             from sp2 in Parse.WhiteSpace.Many()
 
-            from val in MC.Selenium.DSL.Grammar.ParseUrl.Or(
+            from val in MC.Selenium.DSL.GrammarParser.ParseUrl.Or(
                 Parse.CharExcept('.').Many().Select(_ => new String(_.ToArray()))
             )
 

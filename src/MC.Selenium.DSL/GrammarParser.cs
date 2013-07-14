@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MC.Selenium.DSL
 {
-    public static class Grammar
+    public static class GrammarParser
     {
         internal static MC.Selenium.DSL.Command ParseCommandText(string command)
         {
@@ -191,7 +191,7 @@ namespace MC.Selenium.DSL
             .Or(from w in ParseWord("click") select Do.Click)// click
             .Or( // send 'asdf' to 
                 from snd in ParseWord("send")
-                from quoted in Grammar.ParseQuoted
+                from quoted in GrammarParser.ParseQuoted
                 from t in ParseWord("to")
                 select new Action<IWebElement>(_ => _.SendKeys(quoted)))
             ;
@@ -206,13 +206,13 @@ namespace MC.Selenium.DSL
 
         internal static Parser<Func<IWebElement, String>> ParseHasAttribute =
             from w in ParseWords("has", "attribute")
-            from quoted in Grammar.ParseQuoted
+            from quoted in GrammarParser.ParseQuoted
             from sp3 in Parse.WhiteSpace.Many()
             select new Func<IWebElement, String>(_ => _.GetAttribute(quoted));
 
         internal static Parser<Func<IWebElement, String>> ParseHasCssKey =
             from w in ParseWords("has", "css", "key")
-            from quoted in Grammar.ParseQuoted
+            from quoted in GrammarParser.ParseQuoted
             from sp3 in Parse.WhiteSpace.Many()
             select new Func<IWebElement, String>(_ => _.GetCssValue(quoted));
 
@@ -224,12 +224,12 @@ namespace MC.Selenium.DSL
         internal static Parser<Action<String>> ParseEndsWith =
             (
                 from w in ParseWords("that", "ends", "with")
-                from q in Grammar.ParseQuoted
+                from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
                 select new Action<String>(_ => _.EndsWith(q)))
               .Or(
                   from w in ParseWords("ending", "with")
-                  from q in Grammar.ParseQuoted
+                  from q in GrammarParser.ParseQuoted
                   from sp4 in Parse.WhiteSpace.Many()
                   select new Action<String>(_ => _.EndsWith(q))
               );
@@ -237,12 +237,12 @@ namespace MC.Selenium.DSL
         internal static Parser<Action<String>> ParseBeginsWith =
            (
                from w in ParseWords("that", "begins", "with")
-               from q in Grammar.ParseQuoted
+               from q in GrammarParser.ParseQuoted
                from sp4 in Parse.WhiteSpace.Many()
                select new Action<String>(_ => _.StartsWith(q)))
              .Or(
                 from w in ParseWords("beginning", "with")
-                from q in Grammar.ParseQuoted
+                from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
                 select new Action<String>(_ => _.StartsWith(q))
              );
@@ -250,20 +250,20 @@ namespace MC.Selenium.DSL
         internal static Parser<Action<String>> ParseContains =
             (
                 from w in ParseWords("that", "contains")
-                from q in Grammar.ParseQuoted
+                from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
                 select new Action<String>(_ => _.Contains(q))
             )
             .Or(
                 from w in ParseWord("containing")
-                from q in Grammar.ParseQuoted
+                from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
                 select new Action<String>(_ => _.Contains(q))
                 );
 
         internal static Parser<Action<String>> ParseWithValue =
                 from w in ParseWords("with", "value")
-                from q in Grammar.ParseQuoted
+                from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
                 select new Action<String>(_ => _.Equals(q));
 
@@ -271,31 +271,31 @@ namespace MC.Selenium.DSL
         //assert element with id '10' has attribute 'x' that ends with 'x'
         internal static readonly Parser<Action<IWebElement>> ParseAssertion =
             (
-                from doGet in Grammar.ParseHasAttribute.Or(Grammar.ParseHasCssKey)
+                from doGet in GrammarParser.ParseHasAttribute.Or(GrammarParser.ParseHasCssKey)
                 from doTest in
-                    Grammar.ParseEndsWith.Or(
-                    Grammar.ParseContains).Or(
-                    Grammar.ParseWithValue).Or(
-                    Grammar.ParseBeginsWith).Or(
+                    GrammarParser.ParseEndsWith.Or(
+                    GrammarParser.ParseContains).Or(
+                    GrammarParser.ParseWithValue).Or(
+                    GrammarParser.ParseBeginsWith).Or(
                     Parse.WhiteSpace.Many().Return(new Action<String>(_ => { }))) // checking for existance with no additional constraints
                 select new Action<IWebElement>(_ => doTest(doGet(_)))
             )
             .Or(
-                from doGet in Grammar.ParseHasText
+                from doGet in GrammarParser.ParseHasText
                 from doTest in
-                    Grammar.ParseEndsWith.Or(
-                    Grammar.ParseContains).Or(
-                    Grammar.ParseWithValue).Or(
-                    Grammar.ParseBeginsWith).Or(
-                    Grammar.ParseQuoted.Select(_ => new Action<String>(x => x.Equals(_)))).Or(
+                    GrammarParser.ParseEndsWith.Or(
+                    GrammarParser.ParseContains).Or(
+                    GrammarParser.ParseWithValue).Or(
+                    GrammarParser.ParseBeginsWith).Or(
+                    GrammarParser.ParseQuoted.Select(_ => new Action<String>(x => x.Equals(_)))).Or(
                     Parse.WhiteSpace.Many().Return(new Action<String>(_ => { }))) // checking for existance with no additional constraints
                 select new Action<IWebElement>(_ => doTest(doGet(_)))
             ).Or(
                 from w in ParseWord("is")
                 from c in ParseWord("checked").Return(Do.AssertIsChecked)
-                    .Or(Grammar.ParseNotChecked.Return(Do.AssertNotChecked))
+                    .Or(GrammarParser.ParseNotChecked.Return(Do.AssertNotChecked))
                     .Or(ParseWord("selected").Return(Do.AssertIsSelected))
-                    .Or(Grammar.ParseNotSelected.Return(Do.AssertNotSelected))
+                    .Or(GrammarParser.ParseNotSelected.Return(Do.AssertNotSelected))
                 from sp2 in Parse.WhiteSpace.Many()
                 select c
             );
@@ -311,9 +311,9 @@ namespace MC.Selenium.DSL
         //"assert element with id '10' has attribute 'x'"
         internal static readonly Parser<WebElementCommand> ParseAssertCommand =
             from w in ParseWord("assert").ThenOptionalWord("that")
-            from element in Grammar.ParseElement
+            from element in GrammarParser.ParseElement
             from sp3 in Parse.WhiteSpace.Many()
-            from b in Grammar.ParseBy
+            from b in GrammarParser.ParseBy
             from sp4 in Parse.WhiteSpace.Many()
             from doAssert in ParseAssertion
             select new WebElementCommand(b, doAssert);
@@ -335,19 +335,19 @@ namespace MC.Selenium.DSL
                 from doCheck in ParseElement
                 from b in ParseBy
                 from textto in ParseOptionalWord("text").ThenWord("to")
-                from doAction in Grammar.ParseQuoted.Select(_ => Do.Clear.Then(Do.SendKeys(_)))
+                from doAction in GrammarParser.ParseQuoted.Select(_ => Do.Clear.Then(Do.SendKeys(_)))
                     .Or(ParseWord("checked").Select(_ => Do.Check))
-                    .Or(Grammar.ParseNotChecked.Select(_ => Do.UnCheck))
+                    .Or(GrammarParser.ParseNotChecked.Select(_ => Do.UnCheck))
                     .Or(ParseWord("selected").Select(_ => Do.Select))
-                    .Or(Grammar.ParseNotSelected.Select(_ => Do.UnSelect))
+                    .Or(GrammarParser.ParseNotSelected.Select(_ => Do.UnSelect))
                 from sp6 in Parse.WhiteSpace.Many()
                 select new WebElementCommand(b, doCheck.Then(doAction))
             );
 
         internal static readonly Parser<Command> ParseCommand =
-            Grammar.ParseGoToCommand
-            .Or(Grammar.ParseAssertCommand)
-            .Or(Grammar.ParseWebElementCommand);
+            GrammarParser.ParseGoToCommand
+            .Or(GrammarParser.ParseAssertCommand)
+            .Or(GrammarParser.ParseWebElementCommand);
 
         internal static readonly Parser<Command> ParseCommandThen =
             from sp0 in Parse.WhiteSpace.Many()
