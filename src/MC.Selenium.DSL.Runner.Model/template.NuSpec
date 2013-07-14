@@ -1,0 +1,23 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+<metadata>
+  <id>MC.Selenium.DSL.Runner.Model</id>
+  <title>Selenium DSL Runner Model</title>
+  <version>1.0.0</version>
+  <authors>Matthew Cochran</authors>
+  <owners>Matthew Cochran</owners>
+  <licenseUrl>http://matt-cochran.github.io/SeleniumDSL/</licenseUrl>
+  <projectUrl>http://matt-cochran.github.io/SeleniumDSL/</projectUrl>
+  <iconUrl>http://matt-cochran.github.io/SeleniumDSL/</iconUrl>
+  <requireLicenseAcceptance>false</requireLicenseAcceptance>
+  <description>Selenium DSL Runner Model</description>
+  <summary>Selenium DSL Runner Model</summary>
+  <language>en-US</language>
+  <dependencies>
+    <dependency id="MC.Selenium.DSL" version="[||VERSION||]" />
+  </dependencies>
+</metadata>
+  <files>
+    <file src="bin\Release\MC.Selenium.DSL.Runner.Model.*" target="lib\net40" />
+  </files>
+</package>

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="template.NuSpec" />
     <None Include="Sample1.rst">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

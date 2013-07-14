@@ -17,5 +17,7 @@ TestResult.xml
 # Ignore NuGet package files.
 *.nupkg
 Package/lib
-packages/*
+packages/
+src/packages/
+output/
 !packages/repositories.config

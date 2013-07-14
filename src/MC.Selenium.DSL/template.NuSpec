@@ -1,0 +1,25 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>MC.Selenium.DSL</id>
+    <title>Selenium DSL</title>
+    <version>1.0.0</version>
+    <authors>Matthew Cochran</authors>
+    <owners>Matthew Cochran</owners>
+    <licenseUrl>http://matt-cochran.github.io/SeleniumDSL/</licenseUrl>
+    <projectUrl>http://matt-cochran.github.io/SeleniumDSL/</projectUrl>
+    <iconUrl>http://matt-cochran.github.io/SeleniumDSL/</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Core DSL Grammar</description>
+    <summary>Core DSL Grammar</summary>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="Selenium.Support" version="2.33.0" />
+      <dependency id="Selenium.WebDriver" version="2.33.0" />
+      <dependency id="Sprache" version="1.10.0.28" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\||CONFIG||\MC.Selenium.DSL.*" target="lib\net40" />
+  </files>
+</package>

@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MC.Selenium.DSL.Runner.Model")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Selenium Domain Specific Language: Test Parser")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Matthew Cochran")]
 [assembly: AssemblyProduct("MC.Selenium.DSL.Runner.Model")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]

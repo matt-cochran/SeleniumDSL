@@ -65,6 +65,7 @@
     <Compile Include="WebDriverFactory.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="template.NuSpec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
