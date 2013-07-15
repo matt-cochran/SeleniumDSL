@@ -6,26 +6,27 @@ using System.Text;
 
 namespace MC.Selenium.DSL
 {
-    class WebElementCommand:Command
+    class WebElementCommand : Command
     {
-        public By _By;
-        public Action<IWebElement> _Action;
+        private readonly By _By;
+        private readonly TestAction<IWebElement> _Action;
 
         /// <summary>
         /// Initializes a new instance of the WebElementCommand class.
         /// </summary>
         /// <param name="_By"></param>
         /// <param name="_Action"></param>
-        public WebElementCommand(By _By, Action<IWebElement> _Action)
+        public WebElementCommand(By _By, TestAction<IWebElement> _Action)
         {
             this._By = _By;
             this._Action = _Action;
         }
 
 
-        public override void ExecuteWith(OpenQA.Selenium.IWebDriver driver)
+        public override void ExecuteWith(TestContext context)
         {
-            _Action(driver.FindElement(_By));
+            context.Logger.Log(TestEventType.Message, _Action.ActionName + " with ");
+            _Action.Action(context.WebDriver.FindElement(_By));
         }
     }
 }

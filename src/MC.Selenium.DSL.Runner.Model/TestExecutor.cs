@@ -10,14 +10,16 @@ namespace MC.Selenium.DSL.Runner.Model
     internal class TestExecutor : ITestExecutor
     {
         private readonly IWebDriverFactory _DriverFactory;
+        private readonly ITestEventObserver _Logger;
 
         /// <summary>
         /// Initializes a new instance of the TestExecutor class.
         /// </summary>
         /// <param name="_DriverFactory"></param>
-        public TestExecutor(IWebDriverFactory _DriverFactory)
+        public TestExecutor(IWebDriverFactory driverFactory, ITestEventObserver logger)
         {
-            this._DriverFactory = _DriverFactory;
+            _DriverFactory = driverFactory;
+            _Logger = logger;
         }
 
         public void Execute(Test test)
@@ -26,18 +28,19 @@ namespace MC.Selenium.DSL.Runner.Model
             {
                 var command = test.Command.PopulateVariables(test.Variables);
 
+
+
                 using (var driver = _DriverFactory.Build(browser))
                 {
-
-                    driver.ExecuteCommand(command);
+                    driver.ExecuteCommand(command, _Logger);
 
                     try
                     {
                         driver.Quit();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        // Ignore errors if unable to close the browser
+                        _Logger.Log(TestEventType.Warning, "Unable to close browser: " + ex.Message);
                     }
                 }
                 //Assert.AreEqual("", verificationErrors.ToString());

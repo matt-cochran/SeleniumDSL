@@ -6,10 +6,9 @@ using System.Text;
 
 namespace MC.Selenium.DSL
 {
-
     internal abstract class Command
     {
-        public abstract void ExecuteWith(IWebDriver driver);
+        public abstract void ExecuteWith(TestContext context);
     }
 
     

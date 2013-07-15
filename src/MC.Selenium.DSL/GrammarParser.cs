@@ -14,10 +14,17 @@ namespace MC.Selenium.DSL
             return c;
         }
 
+
         public static void ExecuteCommand(this IWebDriver driver, String command)
         {
+            ExecuteCommand(driver, command, new ConsoleTestEventObserver());
+        }
+
+        public static void ExecuteCommand(this IWebDriver driver, String command, ITestEventObserver logger)
+        {
             var c = ParseCommandText(command);
-            c.ExecuteWith(driver);
+            var context = new TestContext { WebDriver = driver, Logger = logger };
+            c.ExecuteWith(context);
         }
 
         internal static readonly Parser<String> ParseHttp =
@@ -173,28 +180,29 @@ namespace MC.Selenium.DSL
             from trailing in Parse.WhiteSpace.Many()
             select value;
 
-        internal static readonly Parser<Action<IWebElement>> ParseElement =
+        internal static readonly Parser<TestAction<IWebElement>> ParseElement =
             from the in ParseOptionalWord("the")
             from x in
-                (from element in ParseWord("element") select Do.Nothing)                                    // element
-                .Or(from w in ParseWords("text", "area") select Do.AssertTagIsTextArea)             // <textarea>
-                .Or(from w in ParseWords("text", "box") select Do.AssertTagIsTextInput)             // <input type="text">
-                .Or(from w in ParseWord("radio").ThenOptionalWord("button").ThenOptionalWord("group") select Do.AssertTagIsRadioInput)// <input type="radio" name="group1" value="Option 1"> Option 1</input>
-                .Or(from w in ParseWords("check", "box") select Do.AssertTagIsCheckBoxInput)        // <input type="checkbox"                
-                .Or(from w in ParseWord("select").ThenOptionalWord("list") select Do.AssertTagIsSelectInput)  //<select id="select1">
-                .Or(from area in ParseWord("option") select Do.AssertTagIsOption)                           //<option id="opt1">
+                (from element in ParseWord("element") select TestAction.Create(Do.Nothing, String.Empty))                                    // element
+                .Or(from w in ParseWords("text", "area") select  TestAction.Create( Do.AssertTagIsTextArea, "is text area" ))         // <textarea>
+                .Or(from w in ParseWords("text", "box") select  TestAction.Create( Do.AssertTagIsTextInput, "is text box" ))             // <input type="text">
+                .Or(from w in ParseWord("radio").ThenOptionalWord("button").ThenOptionalWord("group") select TestAction.Create(Do.AssertTagIsRadioInput, "is radio"))// <input type="radio" name="group1" value="Option 1"> Option 1</input>
+                .Or(from w in ParseWords("check", "box") select TestAction.Create(Do.AssertTagIsCheckBoxInput, "is check box"))        // <input type="checkbox"                
+                .Or(from w in ParseWord("select").ThenOptionalWord("list") select TestAction.Create(Do.AssertTagIsSelectInput, "is select" ))  //<select id="select1">
+                .Or(from area in ParseWord("option") select TestAction.Create(Do.AssertTagIsOption, "is option"))                         //<option id="opt1">
             select x;
 
+
+
         //send 'asdf' to element with name 'q'
-        internal static readonly Parser<Action<IWebElement>> ParseElementAction =
-            (from w in ParseWord("clear") select Do.Clear)// clear
-            .Or(from w in ParseWord("click") select Do.Click)// click
+        internal static readonly Parser<TestAction<IWebElement>> ParseElementAction =
+            (from w in ParseWord("clear") select  TestAction.Clear)// clear
+            .Or(from w in ParseWord("click") select TestAction.Click)// click
             .Or( // send 'asdf' to 
                 from snd in ParseWord("send")
                 from quoted in GrammarParser.ParseQuoted
                 from t in ParseWord("to")
-                select new Action<IWebElement>(_ => _.SendKeys(quoted)))
-            ;
+                select  TestAction.Create(new Action<IWebElement>(_ => _.SendKeys(quoted)), "send keys '" + quoted + "'"));
 
         internal static readonly Parser<By> ParseBy =
             (from w in ParseWords("with", "id") from value in ParseQuoted select By.Id(value))
@@ -269,7 +277,7 @@ namespace MC.Selenium.DSL
 
         //has attribute 'x'
         //assert element with id '10' has attribute 'x' that ends with 'x'
-        internal static readonly Parser<Action<IWebElement>> ParseAssertion =
+        internal static readonly Parser<TestAction<IWebElement>> ParseAssertion =
             (
                 from doGet in GrammarParser.ParseHasAttribute.Or(GrammarParser.ParseHasCssKey)
                 from doTest in
@@ -278,7 +286,7 @@ namespace MC.Selenium.DSL
                     GrammarParser.ParseWithValue).Or(
                     GrammarParser.ParseBeginsWith).Or(
                     Parse.WhiteSpace.Many().Return(new Action<String>(_ => { }))) // checking for existance with no additional constraints
-                select new Action<IWebElement>(_ => doTest(doGet(_)))
+                select TestAction.Create( new Action<IWebElement>(_ => doTest(doGet(_))), "[todo]")
             )
             .Or(
                 from doGet in GrammarParser.ParseHasText
@@ -289,13 +297,13 @@ namespace MC.Selenium.DSL
                     GrammarParser.ParseBeginsWith).Or(
                     GrammarParser.ParseQuoted.Select(_ => new Action<String>(x => x.Equals(_)))).Or(
                     Parse.WhiteSpace.Many().Return(new Action<String>(_ => { }))) // checking for existance with no additional constraints
-                select new Action<IWebElement>(_ => doTest(doGet(_)))
+                select TestAction.Create( new Action<IWebElement>(_ => doTest(doGet(_))), "[todo]")
             ).Or(
                 from w in ParseWord("is")
-                from c in ParseWord("checked").Return(Do.AssertIsChecked)
-                    .Or(GrammarParser.ParseNotChecked.Return(Do.AssertNotChecked))
-                    .Or(ParseWord("selected").Return(Do.AssertIsSelected))
-                    .Or(GrammarParser.ParseNotSelected.Return(Do.AssertNotSelected))
+                from c in ParseWord("checked").Return(TestAction.AssertIsChecked)
+                    .Or(GrammarParser.ParseNotChecked.Return(TestAction.AssertNotChecked))
+                    .Or(ParseWord("selected").Return(TestAction.AssertIsSelected))
+                    .Or(GrammarParser.ParseNotSelected.Return(TestAction.AssertNotSelected))
                 from sp2 in Parse.WhiteSpace.Many()
                 select c
             );
@@ -335,11 +343,11 @@ namespace MC.Selenium.DSL
                 from doCheck in ParseElement
                 from b in ParseBy
                 from textto in ParseOptionalWord("text").ThenWord("to")
-                from doAction in GrammarParser.ParseQuoted.Select(_ => Do.Clear.Then(Do.SendKeys(_)))
-                    .Or(ParseWord("checked").Select(_ => Do.Check))
-                    .Or(GrammarParser.ParseNotChecked.Select(_ => Do.UnCheck))
-                    .Or(ParseWord("selected").Select(_ => Do.Select))
-                    .Or(GrammarParser.ParseNotSelected.Select(_ => Do.UnSelect))
+                from doAction in GrammarParser.ParseQuoted.Select(_ => TestAction.Clear.Then(TestAction.SendKeys(_)))
+                    .Or(ParseWord("checked").Select(_ => TestAction.Check))
+                    .Or(GrammarParser.ParseNotChecked.Select(_ => TestAction.UnCheck))
+                    .Or(ParseWord("selected").Select(_ => TestAction.Select))
+                    .Or(GrammarParser.ParseNotSelected.Select(_ => TestAction.UnSelect))
                 from sp6 in Parse.WhiteSpace.Many()
                 select new WebElementCommand(b, doCheck.Then(doAction))
             );

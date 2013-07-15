@@ -9,11 +9,15 @@ using System.Threading.Tasks;
 
 namespace MC.Selenium.DSL
 {
-    public static class Extensions
+    internal static class Extensions
     {
-        public static Action<T> Then<T>(this Action<T> first, Action<T> second)
+        internal static TestAction<T> Then<T>(this TestAction<T> first, TestAction<T> second)
         {
-            var result = new Action<T>(_ => { first(_); second(_); });
+            var result = new TestAction<T>
+                {
+                    Action = new Action<T>(_ => { first.Action(_); second.Action(_); }),
+                    ActionName = String.Format("{0} then {1}", first.ActionName, second.ActionName)
+                };
             return result;
         }
 

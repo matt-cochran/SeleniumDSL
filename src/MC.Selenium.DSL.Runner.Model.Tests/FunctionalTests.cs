@@ -24,7 +24,7 @@ define search box as element named 'q'.
     assert the search box has value 'asdf'
 }";
 
-            Runner r = new Runner(new TestExecutor(new TestWebDriverFactory()));
+            Runner r = new Runner(new TestExecutor(new TestWebDriverFactory(), new ConsoleTestEventObserver()));
             r.Execute(command);
         }
 
@@ -55,7 +55,7 @@ define search box as element named 'q'.
     assert the search box has value 'asdf'
 }";
 
-            Runner r = new Runner(new TestExecutor(new TestWebDriverFactory()));
+            Runner r = new Runner(new TestExecutor(new TestWebDriverFactory(), new ConsoleTestEventObserver()));
             r.Execute(command);
         }
     }

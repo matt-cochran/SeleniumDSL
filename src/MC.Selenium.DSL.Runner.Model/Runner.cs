@@ -18,9 +18,10 @@ namespace MC.Selenium.DSL.Runner.Model
         internal Runner(ITestExecutor _Executor)
         {
             this._Executor = _Executor;
+            
         }
 
-        public Runner() : this(new TestExecutor(new WebDriverFactory())) { } // cheap IOC
+        public Runner(ITestEventObserver logger) : this(new TestExecutor(new WebDriverFactory(), logger)) { } // cheap IOC
 
         public void Execute(String command)
         {

@@ -13,7 +13,7 @@ namespace MC.Selenium.DSL.Runner
         static void Main(string[] args)
         {
             var text = GetText(args);
-            Model.Runner runner = new Model.Runner();
+            Model.Runner runner = new Model.Runner(new ConsoleTestEventObserver());
             runner.Execute(text);
         }
 

@@ -15,9 +15,10 @@ namespace MC.Selenium.DSL
             this._URL = url;
         }
 
-        public override void ExecuteWith(IWebDriver driver)
+        public override void ExecuteWith(TestContext context)
         {
-            driver.Navigate().GoToUrl(_URL);
+            context.Logger.Log(TestEventType.Message, "going to " + _URL);
+            context.WebDriver.Navigate().GoToUrl(_URL);
         }
 
         public string URL { get { return _URL; } }

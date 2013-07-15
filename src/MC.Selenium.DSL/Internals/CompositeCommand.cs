@@ -15,11 +15,11 @@ namespace MC.Selenium.DSL
             this._Commands = commands.ToArray();
         }
 
-        public override void ExecuteWith(OpenQA.Selenium.IWebDriver driver)
+        public override void ExecuteWith(TestContext context)
         {
             foreach (var item in _Commands)
             {
-                item.ExecuteWith(driver);
+                item.ExecuteWith(context);
             }
         }
     }
