@@ -24,7 +24,7 @@ namespace MC.Selenium.DSL
 
         public static TestAction<IWebElement> SendKeys(String value)
         {
-            return TestAction.Create(Do.SendKeys(value), String.Format("send keys '{0}'", value));
+            return TestAction.Create(Do.SendKeys(value), String.Format("sending keys '{0}' to", value));
         }
         internal static readonly TestAction<IWebElement> AssertIsSelected = TestAction.Create(Do.AssertIsSelected, "asserting is selected");
         internal static readonly TestAction<IWebElement> AssertNotSelected = TestAction.Create(Do.AssertNotSelected, "asserting is not selected");

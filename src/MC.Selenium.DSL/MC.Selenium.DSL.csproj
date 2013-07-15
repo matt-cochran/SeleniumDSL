@@ -66,6 +66,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internals\WebElementCommand.cs" />
     <Compile Include="TestAction.cs" />
+    <Compile Include="TestElement.cs" />
+    <Compile Include="TestFunc.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

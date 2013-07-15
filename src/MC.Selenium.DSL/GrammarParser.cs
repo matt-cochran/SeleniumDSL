@@ -202,78 +202,78 @@ namespace MC.Selenium.DSL
                 from snd in ParseWord("send")
                 from quoted in GrammarParser.ParseQuoted
                 from t in ParseWord("to")
-                select  TestAction.Create(new Action<IWebElement>(_ => _.SendKeys(quoted)), "send keys '" + quoted + "'"));
+                select  TestAction.Create(new Action<IWebElement>(_ => _.SendKeys(quoted)), "sending keys '" + quoted + "' to"));
 
-        internal static readonly Parser<By> ParseBy =
-            (from w in ParseWords("with", "id") from value in ParseQuoted select By.Id(value))
-            .Or(from w in ParseWords("with", "name") from value in ParseQuoted select By.Name(value))
-            .Or(from w in ParseWord("named") from value in ParseQuoted select By.Name(value))
-            .Or(from w in ParseWords("with", "css", "selector") from value in ParseQuoted select By.CssSelector(value))    //"click element with css selector \'#gbqfb\'"
-            .Or(from w in ParseWords("with", "xpath") from value in ParseQuoted select By.XPath(value))                             // @"click element with xpath ""//button[@id='gbqfb']"""
-            .Or(from w in ParseWords("with", "link", "text") from value in ParseQuoted select By.LinkText(value));         // @"click element with link text 'asdf'"
+        internal static readonly Parser<TestElement> ParseBy =
+            (from w in ParseWords("with", "id") from value in ParseQuoted select TestElement.Create( By.Id(value), "element with id '" + value + "'"))
+            .Or(from w in ParseWords("with", "name") from value in ParseQuoted select TestElement.Create( By.Name(value), "element with name '" + value + "'"))
+            .Or(from w in ParseWord("named") from value in ParseQuoted select TestElement.Create( By.Name(value), "element with name '" + value  + "'"))
+            .Or(from w in ParseWords("with", "css", "selector") from value in ParseQuoted select TestElement.Create( By.CssSelector(value), "element with css selector '" + value + "'"))    //"click element with css selector \'#gbqfb\'"
+            .Or(from w in ParseWords("with", "xpath") from value in ParseQuoted select TestElement.Create( By.XPath(value), "element with xpath '" + value + "'"))                             // @"click element with xpath ""//button[@id='gbqfb']"""
+            .Or(from w in ParseWords("with", "link", "text") from value in ParseQuoted select TestElement.Create( By.LinkText(value), "element with link text '" + value + "'"));         // @"click element with link text 'asdf'"
 
-        internal static Parser<Func<IWebElement, String>> ParseHasAttribute =
+        internal static Parser<TestFunc<IWebElement, String>> ParseHasAttribute =
             from w in ParseWords("has", "attribute")
             from quoted in GrammarParser.ParseQuoted
             from sp3 in Parse.WhiteSpace.Many()
-            select new Func<IWebElement, String>(_ => _.GetAttribute(quoted));
+            select TestFunc.Create( new Func<IWebElement, String>(_ => _.GetAttribute(quoted)), "has attribute '" + quoted + "'");
 
-        internal static Parser<Func<IWebElement, String>> ParseHasCssKey =
+        internal static Parser<TestFunc<IWebElement, String>> ParseHasCssKey =
             from w in ParseWords("has", "css", "key")
             from quoted in GrammarParser.ParseQuoted
             from sp3 in Parse.WhiteSpace.Many()
-            select new Func<IWebElement, String>(_ => _.GetCssValue(quoted));
+            select TestFunc.Create(new Func<IWebElement, String>(_ => _.GetCssValue(quoted)), "asserting has css key '" + quoted + "'");
 
-        internal static Parser<Func<IWebElement, String>> ParseHasText =
+        internal static Parser<TestFunc<IWebElement, String>> ParseHasText =
            from has in ParseWord("has")
            from textOrValue in ParseWord("text").Or(ParseWord("value"))
-           select new Func<IWebElement, String>(_ => _.Text);
+           select TestFunc.Create(new Func<IWebElement, String>(_ => _.Text), "asserting has text");
 
-        internal static Parser<Action<String>> ParseEndsWith =
+        internal static Parser<TestAction<String>> ParseEndsWith =
             (
                 from w in ParseWords("that", "ends", "with")
                 from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
-                select new Action<String>(_ => _.EndsWith(q)))
+                select TestAction.Create( new Action<String>(_ => _.EndsWith(q)), " ending with '" + q + "': "))
               .Or(
                   from w in ParseWords("ending", "with")
                   from q in GrammarParser.ParseQuoted
                   from sp4 in Parse.WhiteSpace.Many()
-                  select new Action<String>(_ => _.EndsWith(q))
+                  select TestAction.Create( new Action<String>(_ => _.EndsWith(q)), " ending with "  + q + "': ")
               );
 
-        internal static Parser<Action<String>> ParseBeginsWith =
+        internal static Parser<TestAction<String>> ParseBeginsWith =
            (
                from w in ParseWords("that", "begins", "with")
                from q in GrammarParser.ParseQuoted
                from sp4 in Parse.WhiteSpace.Many()
-               select new Action<String>(_ => _.StartsWith(q)))
+               select TestAction.Create( new Action<String>(_ => _.StartsWith(q)), " beginning with '" + q + "': "))
              .Or(
                 from w in ParseWords("beginning", "with")
                 from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
-                select new Action<String>(_ => _.StartsWith(q))
+                select TestAction.Create( new Action<String>(_ => _.StartsWith(q)), " beginning with '" + q + "' :" )
              );
 
-        internal static Parser<Action<String>> ParseContains =
+        internal static Parser<TestAction<String>> ParseContains =
             (
                 from w in ParseWords("that", "contains")
                 from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
-                select new Action<String>(_ => _.Contains(q))
+                select TestAction.Create( new Action<String>(_ => _.Contains(q)), " containing '" + q + "': ")
             )
             .Or(
                 from w in ParseWord("containing")
                 from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
-                select new Action<String>(_ => _.Contains(q))
+                select TestAction.Create( new Action<String>(_ => _.Contains(q)), " containing '" + q + "':")
                 );
 
-        internal static Parser<Action<String>> ParseWithValue =
+        internal static Parser<TestAction<String>> ParseWithValue =
                 from w in ParseWords("with", "value")
                 from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
-                select new Action<String>(_ => _.Equals(q));
+                select TestAction.Create( new Action<String>(_ => _.Equals(q)), " with value '" + q + "': ");
 
         //has attribute 'x'
         //assert element with id '10' has attribute 'x' that ends with 'x'
@@ -285,8 +285,8 @@ namespace MC.Selenium.DSL
                     GrammarParser.ParseContains).Or(
                     GrammarParser.ParseWithValue).Or(
                     GrammarParser.ParseBeginsWith).Or(
-                    Parse.WhiteSpace.Many().Return(new Action<String>(_ => { }))) // checking for existance with no additional constraints
-                select TestAction.Create( new Action<IWebElement>(_ => doTest(doGet(_))), "[todo]")
+                    Parse.WhiteSpace.Many().Return(TestAction.Create(new Action<String>(_ => { }), ""))) // checking for existance with no additional constraints
+                select TestAction.Create(new Action<IWebElement>(_ => doTest.Action(doGet.Function(_))), doGet.FunctionName + doTest.ActionName)
             )
             .Or(
                 from doGet in GrammarParser.ParseHasText
@@ -295,9 +295,19 @@ namespace MC.Selenium.DSL
                     GrammarParser.ParseContains).Or(
                     GrammarParser.ParseWithValue).Or(
                     GrammarParser.ParseBeginsWith).Or(
-                    GrammarParser.ParseQuoted.Select(_ => new Action<String>(x => x.Equals(_)))).Or(
-                    Parse.WhiteSpace.Many().Return(new Action<String>(_ => { }))) // checking for existance with no additional constraints
-                select TestAction.Create( new Action<IWebElement>(_ => doTest(doGet(_))), "[todo]")
+                    GrammarParser.ParseQuoted.Select(_ =>
+                        TestAction.Create( 
+                                new Action<String>(x => x.Equals(_)), 
+                                "with value '" + _ + "'")                                
+                         )).Or(
+                    Parse.WhiteSpace.Many().Return(                    
+                        TestAction.Create(
+                        new Action<String>(_ => { }),
+                        String.Empty)
+                        
+                        
+                        )) // checking for existance with no additional constraints
+                select TestAction.Create( new Action<IWebElement>(_ => doTest.Action(doGet.Function(_))), doGet.FunctionName + doTest.ActionName  )
             ).Or(
                 from w in ParseWord("is")
                 from c in ParseWord("checked").Return(TestAction.AssertIsChecked)
