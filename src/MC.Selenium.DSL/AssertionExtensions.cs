@@ -11,165 +11,193 @@ namespace MC.Selenium.DSL
 {
     internal static class AssertionExtensions
     {
-        public static void AssertIsChecked(this IWebElement element)
+
+        //public static bool IsChecked(this IWebElement we)
+        //{
+        //    var att = we.GetAttribute("checked");
+
+        //    if (String.IsNullOrWhiteSpace(att))
+        //    {
+        //        return false;
+        //    }
+
+        //    if (att.Equals("true", StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        return true;
+        //    }
+
+        //    if (att.Equals("checked", StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
+
+        //public static bool IsSelected(this IWebElement we)
+        //{
+        //    var att = we.GetAttribute("selected");
+
+        //    if (String.IsNullOrWhiteSpace(att))
+        //    {
+        //        return false;
+        //    }
+
+        //    if (att.Equals("true", StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        return true;
+        //    }
+
+        //    if (att.Equals("selected", StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
+
+        public static Boolean IsChecked(this IWebElement element)
         {
-            element.AssertTagIs(
-                "input",
-                String.Format("element can not be a checkbox or radio, is not a an input tag: <{0} >", element.TagName));
+            if (!element.TagIs("input"))
+            {
+                return false; // TODO: throw?
+            }
 
 
             var att = element.GetAttribute("checked");
 
+            
+
             if (String.IsNullOrWhiteSpace(att))
             {
-                throw new InvalidOperationException("'checked' attribute is null or empty");
+                return false; // todo: throw?
             }
-            
-            if (!att.Equals("true", StringComparison.OrdinalIgnoreCase) &&
-                !att.Equals("checked", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new InvalidOperationException("'checked' attribute is not 'true' or 'checked'");
-            }
+
+            return
+                att.Equals("true", StringComparison.OrdinalIgnoreCase) ||
+                att.Equals("checked", StringComparison.OrdinalIgnoreCase);
         }
 
-        public static void AssertIsCheckboxOrRadio(this IWebElement element)
+        public static Boolean IsCheckboxOrRadio(this IWebElement element)
         {
-            element.AssertTagIs(
-                "input",
-                String.Format("element can not be a checkbox or radio, is not a an input tag: <{0} >", element.TagName));
-
-            
-            var att = element.GetAttribute("type");
-
-            if (String.IsNullOrWhiteSpace(att) ||
-                !(att.Equals("checkbox", StringComparison.OrdinalIgnoreCase) ||
-                   att.Equals("radio", StringComparison.OrdinalIgnoreCase)
-                ))
+            if (!element.TagIs("input"))
             {
-                throw new InvalidOperationException("input tag is not a checkbox or radio: <input type=" + (att ?? String.Empty) + ">");
+                return false;
             }
-        }
-
-        public static void AssertIsCheckbox(this IWebElement element)
-        {
-            element.AssertTagIs(
-                "input",
-                String.Format("element can not be a checkbox, is not a an input tag: <{0} >", element.TagName));
 
 
             var att = element.GetAttribute("type");
 
-            if (String.IsNullOrWhiteSpace(att) || !att.Equals("checkbox", StringComparison.OrdinalIgnoreCase))
+            if (String.IsNullOrWhiteSpace(att))
             {
-                throw new InvalidOperationException("input tag is not a checkbox: <input type=" + (att ?? String.Empty) + ">");
+                return false;
             }
+
+            var result =
+                att.Equals("checkbox", StringComparison.OrdinalIgnoreCase) ||
+                att.Equals("radio", StringComparison.OrdinalIgnoreCase);
+
+            return result;
         }
 
-        public static void AssertIsRadio(this IWebElement element)
+        public static Boolean IsCheckbox(this IWebElement element)
         {
-            element.AssertTagIs(
-                "input",
-                String.Format("element can not be a radio button, is not a an input tag: <{0} >", element.TagName));
+            if (!element.TagIs("input"))
+            {
+                return false;
+            }
 
 
             var att = element.GetAttribute("type");
 
-            if (String.IsNullOrWhiteSpace(att) || !att.Equals("radio", StringComparison.OrdinalIgnoreCase))
+            if (String.IsNullOrWhiteSpace(att))
             {
-                throw new InvalidOperationException("input tag is not a radio button: <input type=" + (att ?? String.Empty) + ">");
+                return false;
             }
+
+            var result = att.Equals("checkbox", StringComparison.OrdinalIgnoreCase);
+            return result;
         }
 
-        public static void AssertIsTextInput(this IWebElement element)
+        public static Boolean IsRadio(this IWebElement element)
         {
-            element.AssertTagIs(
-                "input",
-                String.Format("element can not be a text input, is not a an input tag: <{0} >", element.TagName));
+            if (!element.TagIs("input"))
+            {
+                return false;
+            }
 
 
             var att = element.GetAttribute("type");
 
-            if (String.IsNullOrWhiteSpace(att) || !att.Equals("text", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new InvalidOperationException("input tag is not a text input: <input type=" + (att ?? String.Empty) + ">");
-            }
+            var result = att.Equals("radio", StringComparison.OrdinalIgnoreCase);
+            return result;
         }
 
-        public static void AssertTagIs(this IWebElement element, String tag, String message)
+        public static Boolean IsTextInput(this IWebElement element)
         {
-            if (!element.TagName.Equals(tag, StringComparison.OrdinalIgnoreCase))
+            if (!element.TagIs("input"))
             {
-                throw new InvalidOperationException(message);
-            }
-        }
-
-        public static void AssertIsOptionTag(this IWebElement element)
-        {
-            element.AssertTagIs(
-                "option",
-                String.Format("element is not an option tag: <{0} >", element.TagName));
-        }
-
-        public static void AssertIsNotSelected(this IWebElement element)
-        {
-            AssertIsOptionTag(element);
-
-            var att = element.GetAttribute("selected");
-
-            var result = String.IsNullOrWhiteSpace(att) ||
-                         att.Equals("false", StringComparison.OrdinalIgnoreCase);
-
-            if (!result)
-            {
-                throw new InvalidOperationException("'selected' attribute is not 'false' or empty");
+                return false;
             }
 
+            var att = element.GetAttribute("type");
+            var result = att.Equals("text", StringComparison.OrdinalIgnoreCase);
+            return result;
         }
 
-        public static void AssertIsNotChecked(this IWebElement element)
+        public static Boolean TagIs(this IWebElement element, String tag)
         {
+            var result = element.TagName.Equals(tag, StringComparison.OrdinalIgnoreCase);
+            return result;
+        }
+
+        public static Boolean IsOptionTag(this IWebElement element)
+        {
+            var result = element.TagIs("option");
+            return result;
+        }
+
+        public static Boolean IsNotSelected(this IWebElement element)
+        {
+            return !IsSelected(element);
+        }
+
+        public static Boolean IsNotChecked(this IWebElement element)
+        {
+            return !IsChecked(element);
+        }
+
+        public static Boolean IsSelected(this IWebElement element)
+        {
+            if (!IsOptionTag(element))
             {
-                var att = element.GetAttribute("checked");
-
-                var result = String.IsNullOrWhiteSpace(att) ||
-                             att.Equals("false", StringComparison.OrdinalIgnoreCase);
-
-                if (!result)
-                {
-                    throw new InvalidOperationException("'checked' attribute is not 'false' or empty");
-                }
+                throw new InvalidOperationException("is not option tag");
             }
-        }
-
-        public static void AssertIsSelected(this IWebElement element)
-        {
-            AssertIsOptionTag(element);
 
             var att = element.GetAttribute("selected");
 
             if (String.IsNullOrWhiteSpace(att))
             {
-                throw new InvalidOperationException("'selected' attribute is null or empty");
+                return false;
             }
 
-            if (!att.Equals("true", StringComparison.OrdinalIgnoreCase) &&
-                !att.Equals("selected", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new InvalidOperationException("'selected' attribute is not 'true' or 'selected'");
-            }
+            var result =
+                att.Equals("true", StringComparison.OrdinalIgnoreCase) ||
+                att.Equals("selected", StringComparison.OrdinalIgnoreCase);
+
+            return result;
         }
 
-        public static void AssertContains(this IWebElement element, String value)
+        public static Boolean Contains(this IWebElement element, String value)
         {
+            
             if (String.IsNullOrWhiteSpace(element.Text))
             {
-                throw new InvalidOperationException("element text is empty, it does not contain value " + value);
+                return false;
             }
 
-            if (!element.Text.Contains(value))
-            {
-                throw new InvalidOperationException(String.Format("element text is {0}, it does not contain value {1}", element.Text, value));
-            }
+            var result = element.Text.Contains(value);
+            return result;
 
         }
 

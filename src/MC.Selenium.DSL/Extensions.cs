@@ -11,6 +11,24 @@ namespace MC.Selenium.DSL
 {
     internal static class Extensions
     {
+        internal static TestAction<T> Assert<T>(this TestFunc<T, Boolean> f)
+        {
+            string name = "asserting that " + f.FunctionName;
+
+            return new TestAction<T>
+            {
+                ActionName = name,
+                Action = _ =>
+                    {
+                        if(! f.Function(_))
+                        {
+                            throw new InvalidOperationException(name + " failed.");
+                        }
+                    }
+            };
+            
+        }
+
         internal static TestAction<T> Then<T>(this TestAction<T> first, TestAction<T> second)
         {
             var result = new TestAction<T>
@@ -21,48 +39,6 @@ namespace MC.Selenium.DSL
             return result;
         }
 
-        public static bool IsChecked(this IWebElement we)
-        {
-            var att = we.GetAttribute("checked");
 
-            if (String.IsNullOrWhiteSpace(att))
-            {
-                return false;
-            }
-
-            if (att.Equals("true", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            if (att.Equals("checked", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public static bool IsSelected(this IWebElement we)
-        {
-            var att = we.GetAttribute("selected");
-
-            if (String.IsNullOrWhiteSpace(att))
-            {
-                return false;
-            }
-
-            if (att.Equals("true", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            if (att.Equals("selected", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 }

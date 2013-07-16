@@ -7,20 +7,13 @@ namespace MC.Selenium.DSL
 {
     internal class WebElementTestAction
     {
-        private static readonly TestAction<IWebElement> _Clear = TestAction.Create(Do.Clear, "clearing");
-        private static readonly TestAction<IWebElement> _Click = TestAction.Create(Do.Click, "clicking");
-        private static readonly TestAction<IWebElement> _Check = TestAction.Create(Do.Check, "checking");
-        private static readonly TestAction<IWebElement> _Empty = TestAction.Create(Do.Nothing, String.Empty);
-        private static readonly TestAction<IWebElement> _Select = TestAction.Create(Do.Select, "selecting");
-        private static readonly TestAction<IWebElement> _UnCheck = TestAction.Create(Do.UnCheck, "unchecking");
-        private static readonly TestAction<IWebElement> _UnSelect = TestAction.Create(Do.UnSelect, "unselecting");
-
-        private static readonly TestActionAssert _Assert = new TestActionAssert();
-
-        public TestActionAssert Assert()
-        {
-            return _Assert;
-        }
+        private static readonly TestAction<IWebElement> _Clear = TestAction.Create(Get.Clear, "clearing");
+        private static readonly TestAction<IWebElement> _Click = TestAction.Create(Get.Click, "clicking");
+        private static readonly TestAction<IWebElement> _Check = TestAction.Create(Get.Check, "checking");
+        private static readonly TestAction<IWebElement> _Empty = TestAction.Create(Get.Nothing, String.Empty);
+        private static readonly TestAction<IWebElement> _Select = TestAction.Create(Get.Select, "selecting");
+        private static readonly TestAction<IWebElement> _UnCheck = TestAction.Create(Get.UnCheck, "unchecking");
+        private static readonly TestAction<IWebElement> _UnSelect = TestAction.Create(Get.UnSelect, "unselecting");
 
         public TestAction<IWebElement> Check() { return _Check; }
         public TestAction<IWebElement> Clear() { return _Clear; }
@@ -32,7 +25,7 @@ namespace MC.Selenium.DSL
 
         public TestAction<IWebElement> SendKeys(String value)
         {
-            return TestAction.Create(Do.SendKeys(value), String.Format("sending keys '{0}' to", value));
+            return TestAction.Create(Get.SendKeys(value), String.Format("sending keys '{0}' to", value));
         }
 
         internal TestAction<IWebElement> SetValue(string value)
@@ -40,9 +33,20 @@ namespace MC.Selenium.DSL
             return TestAction.WebElement().Clear().Then(TestAction.WebElement().SendKeys(value));
         }
 
-        internal TestAction<IWebElement> GetAndTest(TestFunc<IWebElement, string> doGet, TestAction<string> doTest)
+        internal TestFunc<IWebElement, Boolean> GetAndTest(TestFunc<IWebElement, string> doGet, TestFunc<string, Boolean> doTest)
         {
-            return TestAction.Create(new Action<IWebElement>(_ => doTest.Action(doGet.Function(_))), doGet.FunctionName + doTest.ActionName);
+            return new TestFunc<IWebElement, Boolean>()
+            {
+                Function = _ => doTest.Function(doGet.Function(_)),
+                FunctionName = doGet.FunctionName + doTest.FunctionName
+            };
+        }
+
+        private static readonly WebElementPredicate _CheckValue = new WebElementPredicate();
+
+        public WebElementPredicate CheckValue()
+        {
+            return _CheckValue;
         }
     }
 }

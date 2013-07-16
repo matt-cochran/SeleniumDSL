@@ -28,19 +28,30 @@ namespace MC.Selenium.DSL
         public static StringTestAction String() { return _StringAction; }
         public static WebElementTestAction WebElement() { return _WebElement; }
 
-        internal static TestFunc<IWebElement, String> HasAttribute(string value)
+        internal static TestFunc<IWebElement, String> GetAttribute(string value)
         {
             return TestFunc.Create(new Func<IWebElement, String>(_ => _.GetAttribute(value)), "has attribute '" + value + "'");
         }
 
-        internal static TestFunc<IWebElement, String> HasCssKey(string quoted)
+        internal static TestFunc<IWebElement, String> GetCssKey(string quoted)
         {
-            return TestFunc.Create(new Func<IWebElement, String>(_ => _.GetCssValue(quoted)), "asserting has css key '" + quoted + "'");
+            return TestFunc.Create(new Func<IWebElement, String>(_ => _.GetCssValue(quoted)), "has css key '" + quoted + "'");
         }
 
-        internal static TestFunc<IWebElement, String> HasText()
+        internal static TestFunc<IWebElement, String> GetText()
         {
-            return TestFunc.Create(new Func<IWebElement, String>(_ => _.Text), "asserting has text");
+            return TestFunc.Create(
+                new Func<IWebElement, String>(_ =>
+                    {
+                        if(_.IsTextInput())
+                        {
+                            return _.GetAttribute("value");
+                        }
+
+
+                        return _.Text;
+                    }),
+                "has text");
         }
     }
 }
