@@ -14,7 +14,6 @@ namespace MC.Selenium.DSL
             return c;
         }
 
-
         public static void ExecuteCommand(this IWebDriver driver, String command)
         {
             ExecuteCommand(driver, command, new ConsoleTestEventObserver());
@@ -127,9 +126,9 @@ namespace MC.Selenium.DSL
         {
             Parser<String> core = null;
 
-            foreach(var word in w)
+            foreach (var word in w)
             {
-                if(core == null)
+                if (core == null)
                 {
                     core = ParseWord(word);
                 }
@@ -165,30 +164,30 @@ namespace MC.Selenium.DSL
 
         internal static readonly Parser<String> ParseQuoted =
             from leading in Parse.WhiteSpace.Many()
-            from value in 
-            (
-                from left in Parse.String("'")
-                from middle in Parse.CharExcept('\'').Many().Select(_ => new string(_.ToArray()))
-                from end in Parse.String("'")
-                select middle)
-            .Or(
-                from left in Parse.String(@"""")
-                from middle in Parse.CharExcept(@"""").Many().Select(_ => new string(_.ToArray()))
-                from end in Parse.String(@"""")
-                select middle
-            )
+            from value in
+                (
+                    from left in Parse.String("'")
+                    from middle in Parse.CharExcept('\'').Many().Select(_ => new string(_.ToArray()))
+                    from end in Parse.String("'")
+                    select middle)
+                .Or(
+                    from left in Parse.String(@"""")
+                    from middle in Parse.CharExcept(@"""").Many().Select(_ => new string(_.ToArray()))
+                    from end in Parse.String(@"""")
+                    select middle
+                )
             from trailing in Parse.WhiteSpace.Many()
             select value;
 
         internal static readonly Parser<TestAction<IWebElement>> ParseElement =
             from the in ParseOptionalWord("the")
             from x in
-                (from element in ParseWord("element") select TestAction.Create(Do.Nothing, String.Empty))                                    // element
-                .Or(from w in ParseWords("text", "area") select  TestAction.Create( Do.AssertTagIsTextArea, "is text area" ))         // <textarea>
-                .Or(from w in ParseWords("text", "box") select  TestAction.Create( Do.AssertTagIsTextInput, "is text box" ))             // <input type="text">
-                .Or(from w in ParseWord("radio").ThenOptionalWord("button").ThenOptionalWord("group") select TestAction.Create(Do.AssertTagIsRadioInput, "is radio"))// <input type="radio" name="group1" value="Option 1"> Option 1</input>
-                .Or(from w in ParseWords("check", "box") select TestAction.Create(Do.AssertTagIsCheckBoxInput, "is check box"))        // <input type="checkbox"                
-                .Or(from w in ParseWord("select").ThenOptionalWord("list") select TestAction.Create(Do.AssertTagIsSelectInput, "is select" ))  //<select id="select1">
+                (from element in ParseWord("element") select TestAction.WebElement().Empty())                                    // element
+                .Or(from w in ParseWords("text", "area") select TestAction.WebElement().Assert().IsTextArea())         // <textarea>
+                .Or(from w in ParseWords("text", "box") select TestAction.WebElement().Assert().IsTextBox())             // <input type="text">
+                .Or(from w in ParseWord("radio").ThenOptionalWord("button").ThenOptionalWord("group") select TestAction.WebElement().Assert().IsRadioButton())// <input type="radio" name="group1" value="Option 1"> Option 1</input>
+                .Or(from w in ParseWords("check", "box") select TestAction.WebElement().Assert().IsCheckBox())        // <input type="checkbox"                
+                .Or(from w in ParseWord("select").ThenOptionalWord("list") select TestAction.WebElement().Assert().IsChecked())  //<select id="select1">
                 .Or(from area in ParseWord("option") select TestAction.Create(Do.AssertTagIsOption, "is option"))                         //<option id="opt1">
             select x;
 
@@ -196,50 +195,53 @@ namespace MC.Selenium.DSL
 
         //send 'asdf' to element with name 'q'
         internal static readonly Parser<TestAction<IWebElement>> ParseElementAction =
-            (from w in ParseWord("clear") select  TestAction.Clear)// clear
-            .Or(from w in ParseWord("click") select TestAction.Click)// click
-            .Or( // send 'asdf' to 
+            (from w in ParseWord("clear") select TestAction.WebElement().Clear())
+            .Or(from w in ParseWord("click") select TestAction.WebElement().Click())
+            .Or(  
                 from snd in ParseWord("send")
                 from quoted in GrammarParser.ParseQuoted
                 from t in ParseWord("to")
-                select  TestAction.Create(new Action<IWebElement>(_ => _.SendKeys(quoted)), "sending keys '" + quoted + "' to"));
+                select TestAction.WebElement().SendKeys(quoted));
 
         internal static readonly Parser<TestElement> ParseBy =
-            (from w in ParseWords("with", "id") from value in ParseQuoted select TestElement.Create( By.Id(value), "element with id '" + value + "'"))
-            .Or(from w in ParseWords("with", "name") from value in ParseQuoted select TestElement.Create( By.Name(value), "element with name '" + value + "'"))
-            .Or(from w in ParseWord("named") from value in ParseQuoted select TestElement.Create( By.Name(value), "element with name '" + value  + "'"))
-            .Or(from w in ParseWords("with", "css", "selector") from value in ParseQuoted select TestElement.Create( By.CssSelector(value), "element with css selector '" + value + "'"))    //"click element with css selector \'#gbqfb\'"
-            .Or(from w in ParseWords("with", "xpath") from value in ParseQuoted select TestElement.Create( By.XPath(value), "element with xpath '" + value + "'"))                             // @"click element with xpath ""//button[@id='gbqfb']"""
-            .Or(from w in ParseWords("with", "link", "text") from value in ParseQuoted select TestElement.Create( By.LinkText(value), "element with link text '" + value + "'"));         // @"click element with link text 'asdf'"
+            (from w in ParseWords("with", "id") from value in ParseQuoted select TestElement.Create(By.Id(value), "element with id '" + value + "'"))
+            .Or(from w in ParseWords("with", "name") from value in ParseQuoted select TestElement.Create(By.Name(value), "element with name '" + value + "'"))
+            .Or(from w in ParseWord("named") from value in ParseQuoted select TestElement.Create(By.Name(value), "element with name '" + value + "'"))
+            .Or(from w in ParseWords("with", "css", "selector") from value in ParseQuoted select TestElement.Create(By.CssSelector(value), "element with css selector '" + value + "'"))    //"click element with css selector \'#gbqfb\'"
+            .Or(from w in ParseWords("with", "xpath") from value in ParseQuoted select TestElement.Create(By.XPath(value), "element with xpath '" + value + "'"))                             // @"click element with xpath ""//button[@id='gbqfb']"""
+            .Or(from w in ParseWords("with", "link", "text") from value in ParseQuoted select TestElement.Create(By.LinkText(value), "element with link text '" + value + "'"));         // @"click element with link text 'asdf'"
 
         internal static Parser<TestFunc<IWebElement, String>> ParseHasAttribute =
             from w in ParseWords("has", "attribute")
             from quoted in GrammarParser.ParseQuoted
             from sp3 in Parse.WhiteSpace.Many()
-            select TestFunc.Create( new Func<IWebElement, String>(_ => _.GetAttribute(quoted)), "has attribute '" + quoted + "'");
+            //select TestFunc.Create(new Func<IWebElement, String>(_ => _.GetAttribute(quoted)), "has attribute '" + quoted + "'");
+            select TestAction.HasAttribute(quoted);
 
         internal static Parser<TestFunc<IWebElement, String>> ParseHasCssKey =
             from w in ParseWords("has", "css", "key")
             from quoted in GrammarParser.ParseQuoted
             from sp3 in Parse.WhiteSpace.Many()
-            select TestFunc.Create(new Func<IWebElement, String>(_ => _.GetCssValue(quoted)), "asserting has css key '" + quoted + "'");
+            select TestAction.HasCssKey(quoted);
 
         internal static Parser<TestFunc<IWebElement, String>> ParseHasText =
            from has in ParseWord("has")
            from textOrValue in ParseWord("text").Or(ParseWord("value"))
-           select TestFunc.Create(new Func<IWebElement, String>(_ => _.Text), "asserting has text");
+           select TestAction.HasText();
 
+
+        // todo: change to TestFunc<String, Bool>
         internal static Parser<TestAction<String>> ParseEndsWith =
             (
                 from w in ParseWords("that", "ends", "with")
                 from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
-                select TestAction.Create( new Action<String>(_ => _.EndsWith(q)), " ending with '" + q + "': "))
+                select TestAction.String().Assert().EndsWith(q))
               .Or(
                   from w in ParseWords("ending", "with")
                   from q in GrammarParser.ParseQuoted
                   from sp4 in Parse.WhiteSpace.Many()
-                  select TestAction.Create( new Action<String>(_ => _.EndsWith(q)), " ending with "  + q + "': ")
+                  select TestAction.String().Assert().EndsWith(q)
               );
 
         internal static Parser<TestAction<String>> ParseBeginsWith =
@@ -247,12 +249,12 @@ namespace MC.Selenium.DSL
                from w in ParseWords("that", "begins", "with")
                from q in GrammarParser.ParseQuoted
                from sp4 in Parse.WhiteSpace.Many()
-               select TestAction.Create( new Action<String>(_ => _.StartsWith(q)), " beginning with '" + q + "': "))
+               select TestAction.Create(new Action<String>(_ => _.StartsWith(q)), " beginning with '" + q + "': "))
              .Or(
                 from w in ParseWords("beginning", "with")
                 from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
-                select TestAction.Create( new Action<String>(_ => _.StartsWith(q)), " beginning with '" + q + "' :" )
+                select TestAction.Create(new Action<String>(_ => _.StartsWith(q)), " beginning with '" + q + "' :")
              );
 
         internal static Parser<TestAction<String>> ParseContains =
@@ -260,23 +262,25 @@ namespace MC.Selenium.DSL
                 from w in ParseWords("that", "contains")
                 from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
-                select TestAction.Create( new Action<String>(_ => _.Contains(q)), " containing '" + q + "': ")
+                select TestAction.Create(new Action<String>(_ => _.Contains(q)), " containing '" + q + "': ")
             )
             .Or(
                 from w in ParseWord("containing")
                 from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
-                select TestAction.Create( new Action<String>(_ => _.Contains(q)), " containing '" + q + "':")
+                select TestAction.Create(new Action<String>(_ => _.Contains(q)), " containing '" + q + "':")
                 );
 
         internal static Parser<TestAction<String>> ParseWithValue =
                 from w in ParseWords("with", "value")
                 from q in GrammarParser.ParseQuoted
                 from sp4 in Parse.WhiteSpace.Many()
-                select TestAction.Create( new Action<String>(_ => _.Equals(q)), " with value '" + q + "': ");
+                select TestAction.Create(new Action<String>(_ => _.Equals(q)), " with value '" + q + "': ");
 
         //has attribute 'x'
         //assert element with id '10' has attribute 'x' that ends with 'x'
+
+        // TODO: Parser<TestFunc<IWebElement, Bool>>
         internal static readonly Parser<TestAction<IWebElement>> ParseAssertion =
             (
                 from doGet in GrammarParser.ParseHasAttribute.Or(GrammarParser.ParseHasCssKey)
@@ -285,8 +289,8 @@ namespace MC.Selenium.DSL
                     GrammarParser.ParseContains).Or(
                     GrammarParser.ParseWithValue).Or(
                     GrammarParser.ParseBeginsWith).Or(
-                    Parse.WhiteSpace.Many().Return(TestAction.Create(new Action<String>(_ => { }), ""))) // checking for existance with no additional constraints
-                select TestAction.Create(new Action<IWebElement>(_ => doTest.Action(doGet.Function(_))), doGet.FunctionName + doTest.ActionName)
+                    Parse.WhiteSpace.Many().Return(TestAction.String().Empty())) // checking for existance with no additional constraints
+                select TestAction.WebElement().GetAndTest(doGet, doTest)
             )
             .Or(
                 from doGet in GrammarParser.ParseHasText
@@ -295,25 +299,16 @@ namespace MC.Selenium.DSL
                     GrammarParser.ParseContains).Or(
                     GrammarParser.ParseWithValue).Or(
                     GrammarParser.ParseBeginsWith).Or(
-                    GrammarParser.ParseQuoted.Select(_ =>
-                        TestAction.Create( 
-                                new Action<String>(x => x.Equals(_)), 
-                                "with value '" + _ + "'")                                
-                         )).Or(
-                    Parse.WhiteSpace.Many().Return(                    
-                        TestAction.Create(
-                        new Action<String>(_ => { }),
-                        String.Empty)
-                        
-                        
-                        )) // checking for existance with no additional constraints
-                select TestAction.Create( new Action<IWebElement>(_ => doTest.Action(doGet.Function(_))), doGet.FunctionName + doTest.ActionName  )
+                    GrammarParser.ParseQuoted.Select(_ => TestAction.String().Assert().IsEqualTo(_))).Or(
+                    Parse.WhiteSpace.Many().Return(TestAction.String().Empty()) // checking for existance with no additional constraints
+                ) 
+                select TestAction.WebElement().GetAndTest(doGet, doTest)
             ).Or(
                 from w in ParseWord("is")
-                from c in ParseWord("checked").Return(TestAction.AssertIsChecked)
-                    .Or(GrammarParser.ParseNotChecked.Return(TestAction.AssertNotChecked))
-                    .Or(ParseWord("selected").Return(TestAction.AssertIsSelected))
-                    .Or(GrammarParser.ParseNotSelected.Return(TestAction.AssertNotSelected))
+                from c in ParseWord("checked").Return(TestAction.WebElement().Assert().IsChecked())
+                    .Or(GrammarParser.ParseNotChecked.Return(TestAction.WebElement().Assert().IsNotChecked()))
+                    .Or(ParseWord("selected").Return(TestAction.WebElement().Assert().IsSelected()))
+                    .Or(GrammarParser.ParseNotSelected.Return(TestAction.WebElement().Assert().IsNotSelected()))
                 from sp2 in Parse.WhiteSpace.Many()
                 select c
             );
@@ -353,11 +348,11 @@ namespace MC.Selenium.DSL
                 from doCheck in ParseElement
                 from b in ParseBy
                 from textto in ParseOptionalWord("text").ThenWord("to")
-                from doAction in GrammarParser.ParseQuoted.Select(_ => TestAction.Clear.Then(TestAction.SendKeys(_)))
-                    .Or(ParseWord("checked").Select(_ => TestAction.Check))
-                    .Or(GrammarParser.ParseNotChecked.Select(_ => TestAction.UnCheck))
-                    .Or(ParseWord("selected").Select(_ => TestAction.Select))
-                    .Or(GrammarParser.ParseNotSelected.Select(_ => TestAction.UnSelect))
+                from doAction in GrammarParser.ParseQuoted.Select(_ => TestAction.WebElement().SetValue(_))
+                    .Or(ParseWord("checked").Select(_ => TestAction.WebElement().Check()))
+                    .Or(GrammarParser.ParseNotChecked.Select(_ => TestAction.WebElement().UnCheck()))
+                    .Or(ParseWord("selected").Select(_ => TestAction.WebElement().Select()))
+                    .Or(GrammarParser.ParseNotSelected.Select(_ => TestAction.WebElement().UnSelect()))
                 from sp6 in Parse.WhiteSpace.Many()
                 select new WebElementCommand(b, doCheck.Then(doAction))
             );
