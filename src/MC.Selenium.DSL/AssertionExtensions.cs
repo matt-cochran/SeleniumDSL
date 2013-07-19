@@ -145,6 +145,12 @@ namespace MC.Selenium.DSL
             return result;
         }
 
+        public static Boolean IsTextArea(this IWebElement element)
+        {
+            var result = element.TagIs("textarea");
+            return result;
+        }
+
         public static Boolean TagIs(this IWebElement element, String tag)
         {
             var result = element.TagName.Equals(tag, StringComparison.OrdinalIgnoreCase);

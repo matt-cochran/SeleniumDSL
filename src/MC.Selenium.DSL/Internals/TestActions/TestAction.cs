@@ -43,7 +43,8 @@ namespace MC.Selenium.DSL
             return TestFunc.Create(
                 new Func<IWebElement, String>(_ =>
                     {
-                        if(_.IsTextInput())
+                        if (_.IsTextInput() ||
+                           _.IsTextArea())
                         {
                             return _.GetAttribute("value");
                         }
