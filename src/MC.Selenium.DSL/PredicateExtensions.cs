@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MC.Selenium.DSL
 {
-    internal static class AssertionExtensions
+    internal static class PredicateExtensions
     {
 
         //public static bool IsChecked(this IWebElement we)

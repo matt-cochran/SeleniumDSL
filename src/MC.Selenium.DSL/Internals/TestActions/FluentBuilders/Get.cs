@@ -7,15 +7,15 @@ namespace MC.Selenium.DSL
 {
     internal static class Get
     {
-        public static readonly Func<IWebElement, Boolean> IsChecked = new Func<IWebElement, Boolean>(AssertionExtensions.IsChecked);
-        public static readonly Func<IWebElement, Boolean> IsNotChecked = new Func<IWebElement, Boolean>(AssertionExtensions.IsNotChecked);
-        public static readonly Func<IWebElement, Boolean> IsSelected = new Func<IWebElement, Boolean>(AssertionExtensions.IsSelected);
-        public static readonly Func<IWebElement, Boolean> IsNotSelected = new Func<IWebElement, Boolean>(AssertionExtensions.IsNotSelected);
+        public static readonly Func<IWebElement, Boolean> IsChecked = new Func<IWebElement, Boolean>(PredicateExtensions.IsChecked);
+        public static readonly Func<IWebElement, Boolean> IsNotChecked = new Func<IWebElement, Boolean>(PredicateExtensions.IsNotChecked);
+        public static readonly Func<IWebElement, Boolean> IsSelected = new Func<IWebElement, Boolean>(PredicateExtensions.IsSelected);
+        public static readonly Func<IWebElement, Boolean> IsNotSelected = new Func<IWebElement, Boolean>(PredicateExtensions.IsNotSelected);
 
         public static readonly Func<IWebElement, Boolean> TagIsTextArea = TagNameIs("textarea");
-        public static readonly Func<IWebElement, Boolean> TagIsTextInput = new Func<IWebElement, Boolean>(AssertionExtensions.IsTextInput);
-        public static readonly Func<IWebElement, Boolean> TagIsRadio = new Func<IWebElement, Boolean>(AssertionExtensions.IsRadio);
-        public static readonly Func<IWebElement, Boolean> TagIsCheckBox = new Func<IWebElement, Boolean>(AssertionExtensions.IsCheckbox);
+        public static readonly Func<IWebElement, Boolean> TagIsTextInput = new Func<IWebElement, Boolean>(PredicateExtensions.IsTextInput);
+        public static readonly Func<IWebElement, Boolean> TagIsRadio = new Func<IWebElement, Boolean>(PredicateExtensions.IsRadio);
+        public static readonly Func<IWebElement, Boolean> TagIsCheckBox = new Func<IWebElement, Boolean>(PredicateExtensions.IsCheckbox);
         public static readonly Func<IWebElement, Boolean> AssertTagIsSelectInput = TagNameIs("select");
         public static readonly Func<IWebElement, Boolean> TagIsOption = TagNameIs("option");
 
