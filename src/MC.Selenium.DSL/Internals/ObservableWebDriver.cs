@@ -8,6 +8,65 @@ using System.Collections.ObjectModel;
 
 namespace MC.Selenium.DSL
 {
+    public class ObservableTargetLocator : ITargetLocator
+    {
+        private readonly ITargetLocator _Core;
+        private readonly ITestEventObserver _Observer;
+
+        /// <summary>
+        /// Initializes a new instance of the ObservableTargetLocator class.
+        /// </summary>
+        /// <param name="_Core"></param>
+        /// <param name="_Observer"></param>
+        public ObservableTargetLocator(ITargetLocator _Core, ITestEventObserver _Observer)
+        {
+            this._Core = _Core;
+            this._Observer = _Observer;
+        }
+
+        public ITestEventObserver Logger
+        {
+            get
+            {
+                return _Observer;
+            }
+        }
+
+        public IWebElement ActiveElement()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAlert Alert()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IWebDriver DefaultContent()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IWebDriver Frame(IWebElement frameElement)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IWebDriver Frame(string frameName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IWebDriver Frame(int frameIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IWebDriver Window(string windowName)
+        {
+            throw new NotImplementedException();
+        }
+    }
     public class ObservableWebDriver : IWebDriver
     {
         private readonly IWebDriver _Core;
@@ -64,8 +123,7 @@ namespace MC.Selenium.DSL
 
         public ITargetLocator SwitchTo()
         {
-            throw new NotSupportedException();
-            return _Core.SwitchTo(); // TODO: do this
+            return new ObservableTargetLocator(_Core.SwitchTo(), _Observer);
         }
 
         public string Title

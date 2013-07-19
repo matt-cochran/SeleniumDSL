@@ -10,6 +10,8 @@ namespace MC.Selenium.DSL
 {
     public static class ObservableExtensions
     {
+        // todo?? try log ITargetLocator
+
         public static Boolean TryLog(this IWebDriver driver, TestEventType type, String message)
         {
             var x = driver as ObservableWebDriver;

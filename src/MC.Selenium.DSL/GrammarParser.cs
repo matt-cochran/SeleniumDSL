@@ -230,8 +230,6 @@ namespace MC.Selenium.DSL
             .Or(ParseWord("value").Return(TestAction.GetAttribute("value")))            
            select textOrValue;
 
-
-        // todo: change to TestFunc<String, Bool>
         internal static Parser<TestFunc<String, Boolean>> ParseEndsWith =
             (
                 from w in ParseWords("that", "ends", "with")
