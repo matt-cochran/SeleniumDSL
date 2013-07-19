@@ -52,6 +52,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internals\Ex.cs" />
+    <Compile Include="Internals\ObservableWebDriver.cs" />
     <Compile Include="Internals\TestActions\FluentBuilders\CheckWebElementValue.cs" />
     <Compile Include="Internals\TestActions\FluentBuilders\StringPredicate.cs" />
     <Compile Include="Observers\ConsoleTestEventObserver.cs" />
@@ -62,7 +64,7 @@
     <Compile Include="Internals\GoToCommand.cs" />
     <Compile Include="GrammarParser.cs" />
     <Compile Include="ITestEventObserver.cs" />
-    <Compile Include="Internals\TestContext.cs" />
+    <Compile Include="Internals\ObservableWebElement.cs" />
     <Compile Include="PredicateExtensions.cs" />
     <Compile Include="TestEventType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

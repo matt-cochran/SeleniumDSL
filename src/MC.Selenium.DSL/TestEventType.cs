@@ -10,6 +10,7 @@ namespace MC.Selenium.DSL
     {
         Message = 0,
         Warning = 1,
-        Failure = 3
+        Failure = 3,
+        Detail = 4
     }
 }

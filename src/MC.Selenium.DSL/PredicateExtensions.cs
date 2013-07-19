@@ -58,15 +58,17 @@ namespace MC.Selenium.DSL
 
         public static Boolean IsChecked(this IWebElement element)
         {
+            LogInfo(element, "checking if is checked");
+            LogTag(element);
+
             if (!element.TagIs("input"))
             {
-                return false; // TODO: throw?
+                return false;
             }
 
-
-            var att = element.GetAttribute("checked");
-
-            
+            string attribute = "checked";
+            var att = element.GetAttribute(attribute);
+            LogAttributeValue(element, attribute);
 
             if (String.IsNullOrWhiteSpace(att))
             {
@@ -78,15 +80,30 @@ namespace MC.Selenium.DSL
                 att.Equals("checked", StringComparison.OrdinalIgnoreCase);
         }
 
+        private static void LogAttributeValue(IWebElement element, string attribute)
+        {
+            element.TryLog(TestEventType.Detail, String.Format("attribute '{0}' has value '{1}'", attribute, (element.GetAttribute(attribute) ?? String.Empty)));
+        }
+
+        private static void LogTag(IWebElement element)
+        {
+            element.TryLog(TestEventType.Detail, String.Format("looking at tag <{0}>", element.TagName));
+            // TODO: get attributes
+        }
+
         public static Boolean IsCheckboxOrRadio(this IWebElement element)
         {
+            LogInfo(element, "checking for checkbox or radio");
+            LogTag(element);
+
             if (!element.TagIs("input"))
             {
                 return false;
             }
 
-
-            var att = element.GetAttribute("type");
+            const string attribute = "type";
+            var att = element.GetAttribute(attribute);
+            LogAttributeValue(element, "type");
 
             if (String.IsNullOrWhiteSpace(att))
             {
@@ -100,15 +117,25 @@ namespace MC.Selenium.DSL
             return result;
         }
 
+        private static void LogInfo(IWebElement element, string message)
+        {
+            element.TryLog(TestEventType.Detail, message);
+        }
+
         public static Boolean IsCheckbox(this IWebElement element)
         {
+            LogInfo(element, "checking for checkbox");
+            LogTag(element);
+
             if (!element.TagIs("input"))
             {
                 return false;
             }
 
 
-            var att = element.GetAttribute("type");
+            const string attribute = "type";
+            var att = element.GetAttribute(attribute);
+            LogAttributeValue(element, attribute);
 
             if (String.IsNullOrWhiteSpace(att))
             {
@@ -121,13 +148,17 @@ namespace MC.Selenium.DSL
 
         public static Boolean IsRadio(this IWebElement element)
         {
+            LogInfo(element, "checking for radio");
+            LogTag(element);
             if (!element.TagIs("input"))
             {
                 return false;
             }
 
 
-            var att = element.GetAttribute("type");
+            string attribute = "type";
+            var att = element.GetAttribute(attribute);
+            LogAttributeValue(element, attribute);
 
             var result = att.Equals("radio", StringComparison.OrdinalIgnoreCase);
             return result;
@@ -135,6 +166,7 @@ namespace MC.Selenium.DSL
 
         public static Boolean IsTextInput(this IWebElement element)
         {
+            // TODO: logging
             if (!element.TagIs("input"))
             {
                 return false;
@@ -147,18 +179,21 @@ namespace MC.Selenium.DSL
 
         public static Boolean IsTextArea(this IWebElement element)
         {
+            // TODO: logging
             var result = element.TagIs("textarea");
             return result;
         }
 
         public static Boolean TagIs(this IWebElement element, String tag)
         {
+            // TODO: logging
             var result = element.TagName.Equals(tag, StringComparison.OrdinalIgnoreCase);
             return result;
         }
 
         public static Boolean IsOptionTag(this IWebElement element)
         {
+            // TODO: logging
             var result = element.TagIs("option");
             return result;
         }

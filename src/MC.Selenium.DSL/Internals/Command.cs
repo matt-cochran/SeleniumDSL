@@ -8,7 +8,7 @@ namespace MC.Selenium.DSL
 {
     internal abstract class Command
     {
-        public abstract void ExecuteWith(TestContext context);
+        public abstract void ExecuteWith(IWebDriver driver);
     }
 
     

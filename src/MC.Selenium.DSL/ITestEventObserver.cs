@@ -9,6 +9,5 @@ namespace MC.Selenium.DSL
     public interface ITestEventObserver
     {
         void Log(TestEventType type, String message);
-        bool IsPassing();
     }
 }

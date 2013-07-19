@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,11 +16,11 @@ namespace MC.Selenium.DSL
             this._Commands = commands.ToArray();
         }
 
-        public override void ExecuteWith(TestContext context)
+        public override void ExecuteWith(IWebDriver driver)
         {
             foreach (var item in _Commands)
             {
-                item.ExecuteWith(context);
+                item.ExecuteWith(driver);
             }
         }
     }

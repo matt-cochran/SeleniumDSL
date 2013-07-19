@@ -19,6 +19,11 @@ namespace MC.Selenium.DSL
                 _Passing = false;
             }
 
+            if (type == TestEventType.Detail)
+            {
+                Console.Write("    ");
+            }
+
             Console.WriteLine(message);
         }
 
@@ -28,6 +33,7 @@ namespace MC.Selenium.DSL
             {
                 case TestEventType.Warning: return ConsoleColor.Yellow;
                 case TestEventType.Failure: return ConsoleColor.Red;
+                case TestEventType.Detail: return ConsoleColor.Gray;
                 default: return ConsoleColor.White;
             }
         }

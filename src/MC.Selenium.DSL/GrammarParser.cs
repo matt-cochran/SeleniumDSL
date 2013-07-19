@@ -22,7 +22,7 @@ namespace MC.Selenium.DSL
         public static void ExecuteCommand(this IWebDriver driver, String command, ITestEventObserver logger)
         {
             var c = ParseCommandText(command);
-            var context = new TestContext { WebDriver = driver, Logger = logger };
+            var context = new ObservableWebDriver(driver, logger);
             c.ExecuteWith(context);
         }
 

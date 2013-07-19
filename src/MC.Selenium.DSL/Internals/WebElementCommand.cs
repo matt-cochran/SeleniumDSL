@@ -23,10 +23,10 @@ namespace MC.Selenium.DSL
         }
 
 
-        public override void ExecuteWith(TestContext context)
+        public override void ExecuteWith(IWebDriver driver)
         {
-            context.Logger.Log(TestEventType.Message, _Action.ActionName + " " + _Element.Name);
-            _Action.Action(context.WebDriver.FindElement(_Element.Finder));
+            driver.TryLog(TestEventType.Message, _Action.ActionName + " " + _Element.Name);
+            _Action.Action(driver.FindElement(_Element.Finder));
         }
     }
 }
