@@ -19,9 +19,18 @@ namespace MC.Selenium.DSL
                 _Passing = false;
             }
 
-            if (type == TestEventType.Detail)
+            switch(type)
             {
-                Console.Write("    ");
+                case TestEventType.Detail:
+                    Console.Write("    ");
+                    break;
+                case TestEventType.BeginOperation:
+                    Console.Write("    begin: ");
+                    break;
+                case TestEventType.EndOperation:          
+                    Console.Write("    end: ");
+                    break;
+                default: break;
             }
 
             Console.WriteLine(message);
@@ -34,6 +43,9 @@ namespace MC.Selenium.DSL
                 case TestEventType.Warning: return ConsoleColor.Yellow;
                 case TestEventType.Failure: return ConsoleColor.Red;
                 case TestEventType.Detail: return ConsoleColor.Gray;
+                case TestEventType.BeginOperation:
+                case TestEventType.EndOperation:
+                    return ConsoleColor.Green;
                 default: return ConsoleColor.White;
             }
         }

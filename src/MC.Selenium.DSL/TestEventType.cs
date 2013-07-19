@@ -11,6 +11,8 @@ namespace MC.Selenium.DSL
         Message = 0,
         Warning = 1,
         Failure = 3,
-        Detail = 4
+        Detail = 4,
+        BeginOperation = 5,
+        EndOperation = 6
     }
 }

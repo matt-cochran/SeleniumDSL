@@ -58,11 +58,12 @@ namespace MC.Selenium.DSL
 
         public static Boolean IsChecked(this IWebElement element)
         {
-            LogInfo(element, "checking if is checked");
+            LogStart(element, "checking if is checked");
             LogTag(element);
 
             if (!element.TagIs("input"))
             {
+                LogEnd(element, "checking if is checked");
                 return false;
             }
 
@@ -72,12 +73,22 @@ namespace MC.Selenium.DSL
 
             if (String.IsNullOrWhiteSpace(att))
             {
+                LogEnd(element, "checking if is checked: false");
                 return false; // todo: throw?
             }
 
-            return
+            var result =
                 att.Equals("true", StringComparison.OrdinalIgnoreCase) ||
                 att.Equals("checked", StringComparison.OrdinalIgnoreCase);
+
+            LogEnd(element, "checking if is checked:" + result);
+
+            return result;
+        }
+
+        private static void LogEnd(IWebElement element, string message)
+        {
+            element.TryLog(TestEventType.EndOperation, message);
         }
 
         private static void LogAttributeValue(IWebElement element, string attribute)
@@ -93,7 +104,7 @@ namespace MC.Selenium.DSL
 
         public static Boolean IsCheckboxOrRadio(this IWebElement element)
         {
-            LogInfo(element, "checking for checkbox or radio");
+            LogStart(element, "checking for checkbox or radio");
             LogTag(element);
 
             if (!element.TagIs("input"))
@@ -115,6 +126,11 @@ namespace MC.Selenium.DSL
                 att.Equals("radio", StringComparison.OrdinalIgnoreCase);
 
             return result;
+        }
+
+        private static void LogStart(IWebElement element, string message)
+        {
+            element.TryLog(TestEventType.BeginOperation, message);
         }
 
         private static void LogInfo(IWebElement element, string message)
@@ -150,6 +166,7 @@ namespace MC.Selenium.DSL
         {
             LogInfo(element, "checking for radio");
             LogTag(element);
+
             if (!element.TagIs("input"))
             {
                 return false;
@@ -231,7 +248,7 @@ namespace MC.Selenium.DSL
 
         public static Boolean Contains(this IWebElement element, String value)
         {
-            
+
             if (String.IsNullOrWhiteSpace(element.Text))
             {
                 return false;
