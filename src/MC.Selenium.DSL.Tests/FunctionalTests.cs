@@ -81,8 +81,8 @@ namespace MC.Selenium.DSL.Tests
 
             driver.ExecuteCommand("go to " + url);
             driver.ExecuteCommand("assert text area with id 'x' has text with value 'text'");
-            //driver.ExecuteCommand("clear text area with id 'x'");
-            //driver.ExecuteCommand("assert textarea with id 'x' has text with value ''");
+            driver.ExecuteCommand("clear text area with id 'x'");
+            driver.ExecuteCommand("assert textarea with id 'x' has text with value ''");
 
             var val = Guid.NewGuid().ToString();
 
