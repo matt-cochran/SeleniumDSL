@@ -19,25 +19,47 @@ namespace MC.Selenium.DSL
         public static readonly Func<IWebElement, Boolean> AssertTagIsSelectInput = TagNameIs("select");
         public static readonly Func<IWebElement, Boolean> TagIsOption = TagNameIs("option");
 
-        internal static Func<IWebElement, Boolean> TagNameIs(string value)
-        {
-            return new Func<IWebElement, Boolean>(_ => _.TagIs(value));
-        }
-
         public static readonly Action<IWebElement> Check = new Action<IWebElement>(DoCheck);
         public static readonly Action<IWebElement> UnCheck = new Action<IWebElement>(DoUnCheck);
-
         public static readonly Action<IWebElement> Select = new Action<IWebElement>(DoSelect);
         public static readonly Action<IWebElement> UnSelect = new Action<IWebElement>(DoUnSelect);
+        public static readonly Action<IWebElement> Clear = new Action<IWebElement>(DoClear);
+        public static readonly Action<IWebElement> Click = new Action<IWebElement>(DoClick);
+        public static readonly Action<IWebElement> Nothing = new Action<IWebElement>(DoNothing);
 
-        public static readonly Action<IWebElement> Clear = new Action<IWebElement>(_ => _.Clear());
-        public static readonly Action<IWebElement> Click = new Action<IWebElement>(_ => _.Click());
-
-        public static readonly Action<IWebElement> Nothing = new Action<IWebElement>(_ => {});
-
-        internal static Action<IWebElement> AssertContains(string q)
+        internal static Func<IWebElement, Boolean> TagNameIs(string value)
         {
-            return new Action<IWebElement>(_ => _.Contains(q));
+            return new Func<IWebElement, Boolean>(_ =>
+                {
+                    _.TryLog(TestEventType.BeginOperation, "check tag name is <" + value + ">");
+                   var result = _.TagIs(value);
+                   _.TryLog(TestEventType.EndOperation, "check tag name is <" + value + ">. Result is " + result + " becase tag is <" + _.TagName + ">.");
+                   return result;
+                });
+        }
+
+        private static void DoClick(IWebElement element)
+        {
+            element.TryLog(TestEventType.BeginOperation, "clicking <" + element.TagName + ">.");
+            element.Click();
+            element.TryLog(TestEventType.EndOperation, "clicking <" + element.TagName + ">.");
+        }
+
+        private static void DoClear(IWebElement element)
+        {
+            element.TryLog(TestEventType.BeginOperation, "clearing <" + element.TagName + ">.");
+            element.Clear();
+            element.TryLog(TestEventType.EndOperation, "clearing <" + element.TagName + ">.");
+        }
+
+        private static void DoNothing(IWebElement obj)
+        {
+            return;
+        }
+
+        internal static Func<IWebElement, Boolean> GetContains(string q)
+        {
+            return new Func<IWebElement, Boolean>(_ => _.Contains(q));
         }
 
         public static Action<IWebElement> SendKeys(String value)

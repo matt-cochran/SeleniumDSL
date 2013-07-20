@@ -58,12 +58,12 @@ namespace MC.Selenium.DSL
 
         public static Boolean IsChecked(this IWebElement element)
         {
-            LogStart(element, "checking if is checked");
+            LogOpStart(element, "checking if is checked");
             LogTag(element);
 
             if (!element.TagIs("input"))
             {
-                LogEnd(element, "checking if is checked");
+                LogEnd(element, "checking if is checked. result is false because tag is <" + element.TagName + ">");
                 return false;
             }
 
@@ -98,13 +98,12 @@ namespace MC.Selenium.DSL
 
         private static void LogTag(IWebElement element)
         {
-            element.TryLog(TestEventType.Detail, String.Format("looking at tag <{0}>", element.TagName));
-            // TODO: get attributes
+            element.TryLog(TestEventType.Detail, String.Format("looking at element <{0}>", element.TagName));
         }
 
         public static Boolean IsCheckboxOrRadio(this IWebElement element)
         {
-            LogStart(element, "checking for checkbox or radio");
+            LogOpStart(element, "checking for checkbox or radio");
             LogTag(element);
 
             if (!element.TagIs("input"))
@@ -128,7 +127,7 @@ namespace MC.Selenium.DSL
             return result;
         }
 
-        private static void LogStart(IWebElement element, string message)
+        private static void LogOpStart(IWebElement element, string message)
         {
             element.TryLog(TestEventType.BeginOperation, message);
         }
@@ -183,28 +182,43 @@ namespace MC.Selenium.DSL
 
         public static Boolean IsTextInput(this IWebElement element)
         {
-            // TODO: logging
+            element.TryLog(TestEventType.BeginOperation, "checking element is text input.");
+
             if (!element.TagIs("input"))
             {
                 return false;
+                element.TryLog(TestEventType.EndOperation, "checking element is text input. Result is false because element tag <" + element.TagName + "> is not <input> tag.");
+
             }
 
             var att = element.GetAttribute("type");
             var result = att.Equals("text", StringComparison.OrdinalIgnoreCase);
+
+            element.TryLog(TestEventType.EndOperation,
+                String.Format(
+                    "checking element is text input. Result is {0} because element tag is <{1}  type='{2}'>.", 
+                    result, 
+                    element.TagName, 
+                    element.GetAttribute("type")));
+
+
             return result;
         }
 
         public static Boolean IsTextArea(this IWebElement element)
         {
-            // TODO: logging
+            element.TryLog(TestEventType.BeginOperation, "checking element is textarea.");
             var result = element.TagIs("textarea");
+            element.TryLog(TestEventType.EndOperation, String.Format("checking element is textarea. Result is {0} becase tag is <{1}>.", result, element.TagName));
             return result;
         }
 
         public static Boolean TagIs(this IWebElement element, String tag)
         {
-            // TODO: logging
+            element.TryLog(TestEventType.BeginOperation, "checking tag name is " + tag + ".");
             var result = element.TagName.Equals(tag, StringComparison.OrdinalIgnoreCase);
+            element.TryLog(TestEventType.EndOperation, "checking tag name is " + tag + ". Result is " + result);
+
             return result;
         }
 

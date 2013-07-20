@@ -17,8 +17,9 @@ namespace MC.Selenium.DSL
 
         public override void ExecuteWith(IWebDriver driver)
         {
-            driver.TryLog(TestEventType.Message, "going to " + _URL);
+            driver.TryLog(TestEventType.BeginCommand, "going to " + _URL);
             driver.Navigate().GoToUrl(_URL);
+            driver.TryLog(TestEventType.EndCommand, "going to " + _URL);
         }
 
         public string URL { get { return _URL; } }

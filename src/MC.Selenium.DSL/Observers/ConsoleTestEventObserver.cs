@@ -22,13 +22,19 @@ namespace MC.Selenium.DSL
             switch(type)
             {
                 case TestEventType.Detail:
-                    Console.Write("    ");
+                    Console.Write("            ");
                     break;
                 case TestEventType.BeginOperation:
-                    Console.Write("    begin: ");
+                    Console.Write("        begin: ");
                     break;
                 case TestEventType.EndOperation:          
-                    Console.Write("    end: ");
+                    Console.Write("        end: ");
+                    break;
+                case TestEventType.BeginCommand:
+                    Console.Write("begin: ");
+                    break;
+                case TestEventType.EndCommand:
+                    Console.Write("end : ");
                     break;
                 default: break;
             }
@@ -45,6 +51,8 @@ namespace MC.Selenium.DSL
                 case TestEventType.Detail: return ConsoleColor.Gray;
                 case TestEventType.BeginOperation:
                 case TestEventType.EndOperation:
+                case TestEventType.BeginCommand:
+                case TestEventType.EndCommand:
                     return ConsoleColor.Green;
                 default: return ConsoleColor.White;
             }

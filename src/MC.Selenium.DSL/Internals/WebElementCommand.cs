@@ -25,8 +25,10 @@ namespace MC.Selenium.DSL
 
         public override void ExecuteWith(IWebDriver driver)
         {
-            driver.TryLog(TestEventType.Message, _Action.ActionName + " " + _Element.Name);
+            driver.TryLog(TestEventType.BeginCommand,  _Action.ActionName + " :" + _Element.Name);
             _Action.Action(driver.FindElement(_Element.Finder));
+            driver.TryLog(TestEventType.EndCommand,  _Action.ActionName + " :" + _Element.Name);
+
         }
     }
 }

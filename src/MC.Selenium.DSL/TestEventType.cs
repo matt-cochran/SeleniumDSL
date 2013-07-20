@@ -13,6 +13,10 @@ namespace MC.Selenium.DSL
         Failure = 3,
         Detail = 4,
         BeginOperation = 5,
-        EndOperation = 6
+        EndOperation = 6,
+        BeginCommand = 7,
+        EndCommand = 8,
+        BeginTest = 9,
+        EndTest = 10
     }
 }

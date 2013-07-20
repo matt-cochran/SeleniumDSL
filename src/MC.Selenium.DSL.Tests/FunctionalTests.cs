@@ -184,8 +184,8 @@ namespace MC.Selenium.DSL.Tests
             driver.ExecuteCommand("assert select with id 'y' has value 'two'");
             driver.ExecuteCommand("assert option with id 'opt1' is not selected");
             driver.ExecuteCommand("assert option with id 'opt2' is selected");
-           // driver.ExecuteCommand("set option with id 'opt2' to not selected");
-           // driver.ExecuteCommand("assert select with id 'y' has value ''");
+            driver.ExecuteCommand("set option with id 'opt2' to not selected");
+            //driver.ExecuteCommand("assert select with id 'y' has value ''"); // todo: get the line above to work
 
         }
 
