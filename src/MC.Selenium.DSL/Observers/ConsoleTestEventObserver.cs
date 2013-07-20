@@ -40,6 +40,7 @@ namespace MC.Selenium.DSL
             }
 
             Console.WriteLine(message);
+            Console.ResetColor();
         }
 
         private ConsoleColor GetConsoleColor(TestEventType type)

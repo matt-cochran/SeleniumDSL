@@ -45,6 +45,8 @@ namespace MC.Selenium.DSL.Tests
             yield return @"click element with css selector '#gbqfb'";
             yield return @"click element with xpath ""//button[@id='gbqfb']""";
             yield return @"click element with link text 'asdf'";
+
+            yield return @"click element with link text ""Selenium - Web Browser Automation""";
            
             yield return @"set element with name 'asdf' text to '1234'";
 

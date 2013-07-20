@@ -31,25 +31,25 @@ namespace MC.Selenium.DSL
         {
             return new Func<IWebElement, Boolean>(_ =>
                 {
-                    _.TryLog(TestEventType.BeginOperation, "check tag name is <" + value + ">");
+                    _.TryLog(TestEventType.BeginOperation, "check tag name is <" + value + "> for " + _.GetTag() + ".");
                    var result = _.TagIs(value);
-                   _.TryLog(TestEventType.EndOperation, "check tag name is <" + value + ">. Result is " + result + " becase tag is <" + _.TagName + ">.");
+                   _.TryLog(TestEventType.EndOperation, "check tag name is <" + value + ">. Result is " + result + " becase tag is " + _.GetTag() + ".");
                    return result;
                 });
         }
 
         private static void DoClick(IWebElement element)
         {
-            element.TryLog(TestEventType.BeginOperation, "clicking <" + element.TagName + ">.");
+            element.TryLog(TestEventType.BeginOperation, "clicking " + element.GetTag() + ".");
             element.Click();
-            element.TryLog(TestEventType.EndOperation, "clicking <" + element.TagName + ">.");
+            element.TryLog(TestEventType.EndOperation, "clicking " + element.GetTag() + ".");
         }
 
         private static void DoClear(IWebElement element)
         {
-            element.TryLog(TestEventType.BeginOperation, "clearing <" + element.TagName + ">.");
+            element.TryLog(TestEventType.BeginOperation, "clearing " + element.GetTag() + ".");
             element.Clear();
-            element.TryLog(TestEventType.EndOperation, "clearing <" + element.TagName + ">.");
+            element.TryLog(TestEventType.EndOperation, "clearing <" + element.GetTag() + ">.");
         }
 
         private static void DoNothing(IWebElement obj)
