@@ -14,9 +14,9 @@ namespace MC.Selenium.DSL
             return _Empty;
         }
 
-        private static readonly StringPredicate _Check = new StringPredicate();
+        private static readonly StringCommandProvider _Check = new StringCommandProvider();
 
-        internal StringPredicate Check()
+        internal StringCommandProvider Check()
         {
             return _Check;
         }

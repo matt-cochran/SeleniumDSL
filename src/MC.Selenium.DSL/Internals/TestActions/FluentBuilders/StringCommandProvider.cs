@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MC.Selenium.DSL
 {
-    internal class StringPredicate
+    internal class StringCommandProvider
     {
         public TestFunc<String, Boolean> Contains(string value)
         {
@@ -25,7 +25,7 @@ namespace MC.Selenium.DSL
             };
         }
 
-        internal TestFunc<String, Boolean> BeginsWith(string value)
+        public TestFunc<String, Boolean> BeginsWith(string value)
         {
             return new TestFunc<string, bool>()
             {
@@ -34,7 +34,7 @@ namespace MC.Selenium.DSL
             };
         }
 
-        internal TestFunc<String, Boolean> IsEqualTo(string value)
+        public TestFunc<String, Boolean> IsEqualTo(string value)
         {
             return new TestFunc<string, bool>()
             {
@@ -43,7 +43,7 @@ namespace MC.Selenium.DSL
             };
         }
 
-        internal TestFunc<String, Boolean> Nothing()
+        public TestFunc<String, Boolean> Nothing()
         {
             return new TestFunc<string, bool>()
             {

@@ -11,7 +11,7 @@ namespace MC.Selenium.DSL
         public String ActionName { get; set; }
     }
 
-    internal static class TestAction
+    internal class TestAction
     {
         internal static TestAction<T> Create<T>(Action<T> action, string name)
         {
@@ -22,11 +22,11 @@ namespace MC.Selenium.DSL
             };
         }
 
-        private static readonly WebElementTestAction _WebElement = new WebElementTestAction();
+        private static readonly WebElementCommandProvider _WebElement = new WebElementCommandProvider();
         private static readonly StringTestAction _StringAction = new StringTestAction();
 
         public static StringTestAction String() { return _StringAction; }
-        public static WebElementTestAction WebElement() { return _WebElement; }
+        public static WebElementCommandProvider WebElement() { return _WebElement; }
 
         internal static TestFunc<IWebElement, String> GetAttribute(string value)
         {

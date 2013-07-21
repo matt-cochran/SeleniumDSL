@@ -53,13 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Internals\Elements\Class1.cs" />
-    <Compile Include="Internals\Ex.cs" />
+    <Compile Include="Internals\ObservableExtensions.cs" />
     <Compile Include="Internals\Observables\ObservableTargetLocator.cs" />
     <Compile Include="Internals\Observables\ObservableWebDriver.cs" />
-    <Compile Include="Internals\TestActions\FluentBuilders\CheckWebElementValue.cs" />
-    <Compile Include="Internals\TestActions\FluentBuilders\StringPredicate.cs" />
+    <Compile Include="Internals\TestActions\FluentBuilders\WebElementFuncProvider.cs" />
+    <Compile Include="Internals\TestActions\FluentBuilders\StringCommandProvider.cs" />
+    <Compile Include="Internals\TestActions\FluentBuilders\WebElementDriver.cs" />
     <Compile Include="Observers\ConsoleTestEventObserver.cs" />
-    <Compile Include="Internals\TestActions\FluentBuilders\Get.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Internals\Command.cs" />
     <Compile Include="Internals\CompositeCommand.cs" />
@@ -73,7 +73,7 @@
     <Compile Include="Internals\WebElementCommand.cs" />
     <Compile Include="Internals\TestActions\FluentBuilders\StringTestAction.cs" />
     <Compile Include="Internals\TestActions\TestAction.cs" />
-    <Compile Include="Internals\TestActions\FluentBuilders\WebElementTestAction.cs" />
+    <Compile Include="Internals\TestActions\FluentBuilders\WebElementCommandProvider.cs" />
     <Compile Include="TestElement.cs" />
     <Compile Include="TestFunc.cs" />
   </ItemGroup>
